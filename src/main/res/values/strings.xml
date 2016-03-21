@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="sig__default_dialog_title">Please sign</string>
+    <string name="sig__default_dialog_action_confirm">Confirm</string>
+    <string name="sig__default_dialog_action_cancel">Cancel</string>
+
+</resources>
