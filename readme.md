@@ -6,14 +6,14 @@ This library is intended to help capture signatures with an easily-configurable 
 
 ### Installation
 
-```
-    repositories {
-        jcenter()
-    }
+```groovy
+repositories {
+    jcenter()
+}
 
-    dependencies {
-        compile('com.guardanis:sigcap:1.0.0')
-    }
+dependencies {
+    compile('com.guardanis:sigcap:1.0.0')
+}
 ```
 
 ### Usage
@@ -30,27 +30,29 @@ This helper class is all you need to integrate sigcap (unless you really want to
 
 Here's an example of how to call the SignatureDialogBuilder, from the gif example above:
 
-    new SignatureDialogBuilder()
-                .show(this, new SignatureDialogBuilder.SignatureEventListener() {
-                    @Override
-                    public void onSignatureEntered(File savedFile) {
-                        new ImageFileRequest<ImageView>(MainActivity.this, savedFile)
-                                .setTargetView((ImageView) findViewById(R.id.test_image))
-                                .setFadeTransition()
-                                .execute(); // Just showing the image 
-                    }
+```java
+new SignatureDialogBuilder()
+            .show(this, new SignatureDialogBuilder.SignatureEventListener() {
+                @Override
+                public void onSignatureEntered(File savedFile) {
+                    new ImageFileRequest<ImageView>(MainActivity.this, savedFile)
+                            .setTargetView((ImageView) findViewById(R.id.test_image))
+                            .setFadeTransition()
+                            .execute(); // Just showing the image 
+                }
 
-                    @Override
-                    public void onSignatureInputCanceled() {
-                        Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
-                                .show();
-                    }
+                @Override
+                public void onSignatureInputCanceled() {
+                    Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
+                            .show();
+                }
 
-                    @Override
-                    public void onSignatureInputError(Throwable e) {
-                        if(e instanceof NoSignatureException) // They clicked confirm without entering anything
-                            doSomethingOnNoSignatureEntered();
-                        else Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                });
+                @Override
+                public void onSignatureInputError(Throwable e) {
+                    if(e instanceof NoSignatureException) // They clicked confirm without entering anything
+                        doSomethingOnNoSignatureEntered();
+                    else Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
+                            .show();
+                }
+            });
+```
