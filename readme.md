@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.guardanis:sigcap:1.0.0')
+    compile('com.guardanis:sigcap:1.0.1')
 }
 ```
 
@@ -35,8 +35,8 @@ new SignatureDialogBuilder()
             .show(this, new SignatureDialogBuilder.SignatureEventListener() {
                 @Override
                 public void onSignatureEntered(File savedFile) {
-                    new ImageFileRequest<ImageView>(MainActivity.this, savedFile)
-                            .setTargetView((ImageView) findViewById(R.id.test_image))
+                    new ImageRequest(MainActivity.this, findViewById(R.id.test_image))
+                            .setTargetFile(savedFile)
                             .setFadeTransition()
                             .execute(); // Just showing the image 
                 }

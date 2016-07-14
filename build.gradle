@@ -47,8 +47,8 @@ ext {
     libraryName = 'sigcap'
     artifact = 'sigcap'
 
-    libraryDescription = 'A library to capture signatures'
-    libraryVersion = '1.0.0'
+    libraryDescription = 'Easily capture signatures'
+    libraryVersion = '1.0.1'
 
     developerId = 'mattsilber'
     developerName = 'Matt Silber'
