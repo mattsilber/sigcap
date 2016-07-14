@@ -17,6 +17,7 @@ public class SignatureDialogBuilder {
 
     public void show(Activity activity, final SignatureEventListener eventListener){
         final View view = buildView(activity);
+
         final SignatureInputView inputView = (SignatureInputView) view.findViewById(R.id.sig__input_view);
 
         new AlertDialog.Builder(activity)

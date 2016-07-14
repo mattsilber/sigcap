@@ -31,17 +31,20 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
     public SignatureInputView(Context context) {
         super(context);
+
         initDefaultValues();
     }
 
     public SignatureInputView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         initDefaultValues();
         initAttributes(attrs, 0);
     }
 
     public SignatureInputView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
         initDefaultValues();
         initAttributes(attrs, defStyleAttr);
     }
@@ -101,7 +104,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent e) {
-        int[] event = new int[]{(int) e.getX(), (int) e.getY()};
+        int[] event = new int[]{ (int) e.getX(), (int) e.getY() };
 
         if(e.getAction() == MotionEvent.ACTION_UP){
             lastTouchEvent = null;
@@ -147,8 +150,10 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     protected void drawIndicators(Canvas canvas){
-        canvas.drawLine(baselinePaddingHorizontal, canvas.getHeight() - baselinePaddingBottom,
-                canvas.getWidth() - baselinePaddingHorizontal, canvas.getHeight() - baselinePaddingBottom,
+        canvas.drawLine(baselinePaddingHorizontal,
+                canvas.getHeight() - baselinePaddingBottom,
+                canvas.getWidth() - baselinePaddingHorizontal,
+                canvas.getHeight() - baselinePaddingBottom,
                 baselinePaint);
 
         drawXMark(canvas);
