@@ -1,0 +1,46 @@
+buildscript {
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        minSdkVersion 9
+        targetSdkVersion 27
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+group = 'com.guardanis'
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'sigcap'
+
+    publishedGroupId = 'com.guardanis'
+    libraryName = 'sigcap'
+    artifact = 'sigcap'
+
+    libraryDescription = 'Easily capture signatures'
+    libraryVersion = '1.0.1'
+
+    developerId = 'mattsilber'
+    developerName = 'Matt Silber'
+    developerEmail = 'matt@guardanis.com'
+}
+
+apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/bintrayv1.gradle'

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="base__window_bg">#ECF0F1</color>
+    <color name="base__primary">#34495E</color>
+    <color name="base__primary_dark">#2C3E50</color>
+    <color name="base__accent">#34495E</color>
+
+    <color name="base__toolbar_item">#FFFFFF</color>
+
+    <color name="base__text_dark_0">#DE000000</color>
+    <color name="base__text_dark_1">#8A000000</color>
+    <color name="base__text_dark_2">#42000000</color>
+    <color name="base__text_dark_3">#22000000</color>
+
+    <color name="base__text_white">#FFFFFF</color>
+    <color name="base__text_white_0">#DEFFFFFF</color>
+    <color name="base__text_white_1">#8AFFFFFF</color>
+    <color name="base__text_white_2">#42FFFFFF</color>
+
+    <color name="base__button_transparent">#00000000</color>
+    <color name="base__button_transparent_pressed">#44FFFFFF</color>
+
+</resources>

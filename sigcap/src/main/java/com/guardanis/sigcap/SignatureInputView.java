@@ -202,5 +202,4 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     public boolean isSignatureInputAvailable(){
         return !(signaturePaths.size() < 1 && (activeSignaturePaths == null || activeSignaturePaths.size() < 1));
     }
-
 }

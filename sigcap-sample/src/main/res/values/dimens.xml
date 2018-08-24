@@ -1,0 +1,19 @@
+<resources>
+
+    <dimen name="base__toolbar_size">50dip</dimen>
+
+    <dimen name="base__toolbar_title">18dip</dimen>
+    <dimen name="base__toolbar_title_padding_horizontal">12dip</dimen>
+
+    <dimen name="base__toolbar_option_text">14dip</dimen>
+    <dimen name="base__toolbar_option_image">30dip</dimen>
+    <dimen name="base__toolbar_option_padding">12dip</dimen>
+
+    <dimen name="base__toolbar_item_horizontal_padding">12dip</dimen>
+    <dimen name="base__toolbar_item_button_size">30dip</dimen>
+    <dimen name="base__toolbar_item_button_size_with_horizontal_padding">54dip</dimen>
+
+    <dimen name="base__toolbar_svg_padding_horizontal">17dip</dimen>
+    <dimen name="base__toolbar_svg_padding_vertical">15dip</dimen>
+
+</resources>

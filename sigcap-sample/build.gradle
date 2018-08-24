@@ -1,0 +1,48 @@
+buildscript {
+    ext.kotlin_version = '1.2.41'
+
+    dependencies {
+        classpath 'com.novoda:gradle-android-command-plugin:1.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'android-command'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 27
+    }
+
+    sourceSets.main.assets.srcDirs = ['assets']
+}
+
+repositories {
+    jcenter()
+    maven { url 'https://maven.google.com/' }
+}
+
+ext.support_library_version = '27.1.1'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    implementation "com.android.support:appcompat-v7:$support_library_version"
+    implementation "com.android.support:support-v4:$support_library_version"
+    implementation "com.android.support:design:$support_library_version"
+
+    implementation project(path: ':sigcap')
+
+    implementation "com.guardanis:imageloader:1.4.1"
+    implementation "com.guardanis:netclient:1.2.1"
+    implementation "com.guardanis:font-utils:1.0.3"
+}
+

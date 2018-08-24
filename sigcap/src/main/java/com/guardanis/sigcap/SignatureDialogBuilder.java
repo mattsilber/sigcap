@@ -59,6 +59,4 @@ public class SignatureDialogBuilder {
         return activity.getLayoutInflater()
                 .inflate(R.layout.sig__default_dialog, null, false);
     }
-
-
 }
