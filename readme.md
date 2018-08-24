@@ -32,27 +32,27 @@ Here's an example of how to call the SignatureDialogBuilder, from the gif exampl
 
 ```java
 new SignatureDialogBuilder()
-            .show(this, new SignatureDialogBuilder.SignatureEventListener() {
-                @Override
-                public void onSignatureEntered(File savedFile) {
-                    new ImageRequest(MainActivity.this, findViewById(R.id.test_image))
-                            .setTargetFile(savedFile)
-                            .setFadeTransition()
-                            .execute(); // Just showing the image 
-                }
-
-                @Override
-                public void onSignatureInputCanceled() {
-                    Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
-                            .show();
-                }
-
-                @Override
-                public void onSignatureInputError(Throwable e) {
-                    if(e instanceof NoSignatureException) // They clicked confirm without entering anything
-                        doSomethingOnNoSignatureEntered();
-                    else Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
-                            .show();
-                }
-            });
+    .show(this, new SignatureDialogBuilder.SignatureEventListener() {
+        @Override
+        public void onSignatureEntered(File savedFile) {
+            new ImageRequest(MainActivity.this, findViewById(R.id.test_image))
+                .setTargetFile(savedFile)
+                .setFadeTransition()
+                .execute(); // Just showing the image 
+            }
+            
+            @Override
+            public void onSignatureInputCanceled() {
+                Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
+                    .show();
+            }
+            
+            @Override
+            public void onSignatureInputError(Throwable e) {
+                if(e instanceof NoSignatureException) // They clicked confirm without entering anything
+                    // doSomethingOnNoSignatureEntered();
+                else Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
+                    .show();
+            }
+    });
 ```
