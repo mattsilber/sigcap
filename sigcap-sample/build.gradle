@@ -16,6 +16,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'android-command'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
@@ -49,4 +50,3 @@ dependencies {
 
     implementation "com.guardanis:imageloader:2.0.0"
 }
-
