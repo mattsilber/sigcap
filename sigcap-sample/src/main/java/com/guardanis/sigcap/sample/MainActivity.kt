@@ -6,11 +6,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import com.guardanis.imageloader.ImageRequest
 import com.guardanis.sigcap.NoSignatureException
 import com.guardanis.sigcap.SignatureDialogBuilder
 import com.guardanis.sigcap.SignatureRequest
-import java.io.File
+import com.guardanis.sigcap.SignatureResponse
 
 class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventListener {
 
@@ -30,11 +29,12 @@ class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventLi
                 .show(this, this)
     }
 
-    override fun onSignatureEntered(savedFile: File) {
-        ImageRequest(this, findViewById<AppCompatImageView>(R.id.main__image))
-                .setTargetFile(savedFile)
-                .setFadeTransition()
-                .execute() // Just showing the image
+    override fun onSignatureEntered(response: SignatureResponse) {
+        findViewById<AppCompatImageView>(R.id.main__image)
+                .setImageBitmap(response.result)
+
+        val savedFile = response.saveToFileCache(this)
+                .get()
     }
 
     override fun onSignatureInputCanceled() {

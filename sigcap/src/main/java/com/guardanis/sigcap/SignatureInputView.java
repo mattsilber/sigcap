@@ -10,8 +10,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -131,14 +129,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return renderer.renderToBitmap(request, signaturePaths, lastRenderBounds);
     }
 
-    public File saveSignature() throws Exception {
-        File file = new FileCache(getContext())
-                .getFile(String.valueOf(System.currentTimeMillis()));
-
-        Bitmap bitmap = renderToBitmap();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(file));
-
-        return file;
+    public SignatureResponse saveSignature() {
+        return new SignatureResponse(request, renderToBitmap());
     }
 
     public boolean isSignatureInputAvailable(){

@@ -5,12 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
 
-import java.io.File;
-
 public class SignatureDialogBuilder {
 
     public interface SignatureEventListener {
-        public void onSignatureEntered(File savedFile);
+        public void onSignatureEntered(SignatureResponse response);
         public void onSignatureInputCanceled();
         public void onSignatureInputError(Throwable e);
     }
@@ -49,7 +47,7 @@ public class SignatureDialogBuilder {
                             if(!inputView.isSignatureInputAvailable())
                                 throw new NoSignatureException("No signature found");
 
-                            File saved = inputView.saveSignature();
+                            SignatureResponse saved = inputView.saveSignature();
 
                             eventListener.onSignatureEntered(saved);
                         }
