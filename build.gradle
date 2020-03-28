@@ -1,21 +1,17 @@
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
-}
-
 allprojects {
     buildscript {
         repositories {
-            jcenter()
             maven { url 'https://maven.google.com/' }
+            jcenter()
         }
 
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.1.2'
+            classpath 'com.android.tools.build:gradle:3.5.3'
         }
     }
 
     repositories {
-        jcenter()
         maven { url 'https://maven.google.com/' }
+        jcenter()
     }
 }
