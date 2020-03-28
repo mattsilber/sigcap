@@ -11,16 +11,10 @@ import java.util.concurrent.Future;
 
 public class SignatureResponse {
 
-    private final SignatureRequest request;
     private final Bitmap result;
 
-    public SignatureResponse(SignatureRequest request, Bitmap result) {
-        this.request = request;
+    public SignatureResponse(Bitmap result) {
         this.result = result;
-    }
-
-    public SignatureRequest getRequest() {
-        return request;
     }
 
     public Bitmap getResult() {

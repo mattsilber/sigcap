@@ -130,7 +130,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     public SignatureResponse saveSignature() {
-        return new SignatureResponse(request, renderToBitmap());
+        return new SignatureResponse(renderToBitmap());
     }
 
     public boolean isSignatureInputAvailable(){
