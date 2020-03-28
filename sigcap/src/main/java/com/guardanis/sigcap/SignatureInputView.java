@@ -28,6 +28,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         super(context);
 
         setOnTouchListener(this);
+        initAttributes(null, 0);
     }
 
     public SignatureInputView(Context context, AttributeSet attrs) {

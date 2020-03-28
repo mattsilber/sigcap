@@ -6,10 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import com.guardanis.sigcap.NoSignatureException
-import com.guardanis.sigcap.SignatureDialogBuilder
-import com.guardanis.sigcap.SignatureRequest
-import com.guardanis.sigcap.SignatureResponse
+import com.guardanis.sigcap.*
 
 class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventListener {
 
@@ -17,6 +14,12 @@ class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventLi
         super.onCreate(savedInstance)
 
         setContentView(R.layout.activity_main)
+    }
+
+    override fun onPause() {
+        FileCache.clear(this)
+
+        super.onPause()
     }
 
     fun startClicked(view: View?) {
