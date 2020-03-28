@@ -1,6 +1,5 @@
 package com.guardanis.sigcap;
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
