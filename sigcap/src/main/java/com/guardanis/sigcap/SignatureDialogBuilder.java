@@ -15,10 +15,30 @@ public class SignatureDialogBuilder {
         public void onSignatureInputError(Throwable e);
     }
 
-    public void show(Activity activity, final SignatureEventListener eventListener){
+    private SignatureRequest request = new SignatureRequest();
+    private SignatureRenderer renderer;
+
+    public SignatureDialogBuilder setRequest(SignatureRequest request) {
+        this.request = request;
+
+        return this;
+    }
+
+    public SignatureDialogBuilder setSignatureRenderer(SignatureRenderer renderer) {
+        this.renderer = renderer;
+
+        return this;
+    }
+
+    public void show(Activity activity, final SignatureEventListener eventListener) {
         final View view = buildView(activity);
 
         final SignatureInputView inputView = (SignatureInputView) view.findViewById(R.id.sig__input_view);
+        inputView.setSignatureRequest(request);
+
+        if (renderer != null) {
+            inputView.setSignatureRenderer(renderer);
+        }
 
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.sig__default_dialog_title)

@@ -1,5 +1,6 @@
 package com.guardanis.sigcap.sample
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -8,6 +9,8 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.imageloader.ImageRequest
 import com.guardanis.sigcap.NoSignatureException
 import com.guardanis.sigcap.SignatureDialogBuilder
+import com.guardanis.sigcap.SignatureRenderer
+import com.guardanis.sigcap.SignatureRequest
 import java.io.File
 
 class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventListener {
@@ -20,6 +23,11 @@ class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventLi
 
     fun startClicked(view: View?) {
         SignatureDialogBuilder()
+                .setRequest(
+                        SignatureRequest()
+                                .setResultBackgroundColor(Color.TRANSPARENT)
+                                .setIncludeBaseline(true)
+                                .setIncludeBaselineXMark(true))
                 .show(this, this)
     }
 
