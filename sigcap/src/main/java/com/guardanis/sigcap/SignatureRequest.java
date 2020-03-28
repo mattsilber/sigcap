@@ -1,14 +1,13 @@
 package com.guardanis.sigcap;
 
-import android.content.Context;
 import android.graphics.Color;
 
 public class SignatureRequest {
 
     private int resultBackgroundColor = Color.WHITE;
 
-    private boolean includeBaseline = true;
-    private boolean includeBaselineXMark = true;
+    private boolean resultIncludeBaseline = true;
+    private boolean resultIncludeBaselineXMark = true;
 
     public int getResultBackgroundColor() {
         return resultBackgroundColor;
@@ -20,22 +19,22 @@ public class SignatureRequest {
         return this;
     }
 
-    public boolean shouldIncludeBaseline() {
-        return includeBaseline;
+    public boolean shouldResultIncludeBaseline() {
+        return resultIncludeBaseline;
     }
 
-    public SignatureRequest setIncludeBaseline(boolean includeBaseline) {
-        this.includeBaseline = includeBaseline;
+    public SignatureRequest setResultIncludeBaseline(boolean resultIncludeBaseline) {
+        this.resultIncludeBaseline = resultIncludeBaseline;
 
         return this;
     }
 
-    public boolean shouldIncludeBaselineXMark() {
-        return includeBaselineXMark;
+    public boolean shouldResultIncludeBaselineXMark() {
+        return resultIncludeBaselineXMark;
     }
 
-    public SignatureRequest setIncludeBaselineXMark(boolean includeBaselineXMark) {
-        this.includeBaselineXMark = includeBaselineXMark;
+    public SignatureRequest setResultIncludeBaselineXMark(boolean resultIncludeBaselineXMark) {
+        this.resultIncludeBaselineXMark = resultIncludeBaselineXMark;
 
         return this;
     }

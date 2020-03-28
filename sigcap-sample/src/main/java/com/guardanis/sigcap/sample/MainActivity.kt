@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.imageloader.ImageRequest
 import com.guardanis.sigcap.NoSignatureException
 import com.guardanis.sigcap.SignatureDialogBuilder
-import com.guardanis.sigcap.SignatureRenderer
 import com.guardanis.sigcap.SignatureRequest
 import java.io.File
 
@@ -26,8 +25,8 @@ class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventLi
                 .setRequest(
                         SignatureRequest()
                                 .setResultBackgroundColor(Color.TRANSPARENT)
-                                .setIncludeBaseline(true)
-                                .setIncludeBaselineXMark(true))
+                                .setResultIncludeBaseline(true)
+                                .setResultIncludeBaselineXMark(true))
                 .show(this, this)
     }
 

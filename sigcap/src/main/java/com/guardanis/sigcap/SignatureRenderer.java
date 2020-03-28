@@ -68,11 +68,11 @@ public class SignatureRenderer {
         Canvas canvas = new Canvas(bitmap);
         canvas.drawColor(request.getResultBackgroundColor());
 
-        if (request.shouldIncludeBaseline()) {
+        if (request.shouldResultIncludeBaseline()) {
             drawBaseline(canvas);
         }
 
-        if (request.shouldIncludeBaselineXMark()) {
+        if (request.shouldResultIncludeBaselineXMark()) {
             drawBaselineXMark(canvas);
         }
 
