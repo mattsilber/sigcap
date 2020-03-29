@@ -1,19 +1,42 @@
 package com.guardanis.sigcap;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.view.View;
 
-import java.io.File;
-
 public class SignatureDialogBuilder {
 
-    public void show(Activity activity, final SignatureEventListener eventListener){
+    public interface SignatureEventListener {
+        public void onSignatureEntered(SignatureResponse response);
+        public void onSignatureInputCanceled();
+        public void onSignatureInputError(Throwable e);
+    }
+
+    private SignatureRequest request = new SignatureRequest();
+    private SignatureRenderer renderer;
+
+    public SignatureDialogBuilder setRequest(SignatureRequest request) {
+        this.request = request;
+
+        return this;
+    }
+
+    public SignatureDialogBuilder setSignatureRenderer(SignatureRenderer renderer) {
+        this.renderer = renderer;
+
+        return this;
+    }
+
+    public void show(Activity activity, final SignatureEventListener eventListener) {
         final View view = buildView(activity);
 
-        final SignatureInputView inputView = view.findViewById(R.id.sig__input_view);
+        final SignatureInputView inputView = (SignatureInputView) view.findViewById(R.id.sig__input_view);
+        inputView.setSignatureRequest(request);
+
+        if (renderer != null) {
+            inputView.setSignatureRenderer(renderer);
+        }
 
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.sig__default_dialog_title)
@@ -24,7 +47,7 @@ public class SignatureDialogBuilder {
                             if(!inputView.isSignatureInputAvailable())
                                 throw new NoSignatureException("No signature found");
 
-                            File saved = inputView.saveSignature();
+                            SignatureResponse saved = inputView.saveSignature();
 
                             eventListener.onSignatureEntered(saved);
                         }
@@ -50,8 +73,7 @@ public class SignatureDialogBuilder {
                 });
     }
 
-    @SuppressLint("InflateParams")
-    private View buildView(Activity activity){
+    protected View buildView(Activity activity){
         return activity.getLayoutInflater()
                 .inflate(R.layout.sig__default_dialog, null, false);
     }

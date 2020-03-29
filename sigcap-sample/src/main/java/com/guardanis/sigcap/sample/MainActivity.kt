@@ -1,17 +1,14 @@
 package com.guardanis.sigcap.sample
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
-import com.guardanis.imageloader.ImageRequest
-import com.guardanis.sigcap.NoSignatureException
-import com.guardanis.sigcap.SignatureDialogFragment
-import com.guardanis.sigcap.SignatureEventListener
-import java.io.File
+import com.guardanis.sigcap.*
 
-class MainActivity : AppCompatActivity(), SignatureEventListener {
+class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventListener {
 
     override fun onCreate(savedInstance: Bundle?) {
         super.onCreate(savedInstance)
@@ -19,20 +16,31 @@ class MainActivity : AppCompatActivity(), SignatureEventListener {
         setContentView(R.layout.activity_main)
     }
 
+    override fun onPause() {
+        FileCache.clear(this)
+
+        super.onPause()
+    }
+
     fun startClicked(view: View?) {
-//        SignatureDialogBuilder()
-//                .show(this, this)
+        SignatureDialogBuilder()
+                .setRequest(
+                        SignatureRequest()
+                                .setResultBackgroundColor(Color.TRANSPARENT)
+                                .setResultIncludeBaseline(true)
+                                .setResultIncludeBaselineXMark(true))
+                .show(this, this)
 
         SignatureDialogFragment().show(supportFragmentManager, "SignatureDialog")
     }
 
-    override fun onSignatureEntered(savedFile: File) {
-        ImageRequest(this, findViewById<AppCompatImageView>(R.id.main__image))
-                .setTargetFile(savedFile)
-                .setFadeTransition()
-                .execute() // Just showing the image
-    }
+    override fun onSignatureEntered(response: SignatureResponse) {
+        findViewById<AppCompatImageView>(R.id.main__image)
+                .setImageBitmap(response.result)
 
+        val savedFile = response.saveToFileCache(this)
+                .get()
+    }
 
     override fun onSignatureInputCanceled() {
         Toast.makeText(this, "Signature input canceled", Toast.LENGTH_SHORT)
