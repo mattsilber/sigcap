@@ -1,16 +1,17 @@
 package com.guardanis.sigcap.sample
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
 import android.view.View
 import android.widget.Toast
-import com.guardanis.sigcap.NoSignatureException
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.imageloader.ImageRequest
-import com.guardanis.sigcap.SignatureDialogBuilder
+import com.guardanis.sigcap.NoSignatureException
+import com.guardanis.sigcap.SignatureDialogFragment
+import com.guardanis.sigcap.SignatureEventListener
 import java.io.File
 
-class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventListener {
+class MainActivity : AppCompatActivity(), SignatureEventListener {
 
     override fun onCreate(savedInstance: Bundle?) {
         super.onCreate(savedInstance)
@@ -19,8 +20,10 @@ class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventLi
     }
 
     fun startClicked(view: View?) {
-        SignatureDialogBuilder()
-                .show(this, this)
+//        SignatureDialogBuilder()
+//                .show(this, this)
+
+        SignatureDialogFragment().show(supportFragmentManager, "SignatureDialog")
     }
 
     override fun onSignatureEntered(savedFile: File) {
@@ -29,6 +32,7 @@ class MainActivity: AppCompatActivity(), SignatureDialogBuilder.SignatureEventLi
                 .setFadeTransition()
                 .execute() // Just showing the image
     }
+
 
     override fun onSignatureInputCanceled() {
         Toast.makeText(this, "Signature input canceled", Toast.LENGTH_SHORT)

@@ -1,5 +1,6 @@
 package com.guardanis.sigcap;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,16 +10,10 @@ import java.io.File;
 
 public class SignatureDialogBuilder {
 
-    public interface SignatureEventListener {
-        public void onSignatureEntered(File savedFile);
-        public void onSignatureInputCanceled();
-        public void onSignatureInputError(Throwable e);
-    }
-
     public void show(Activity activity, final SignatureEventListener eventListener){
         final View view = buildView(activity);
 
-        final SignatureInputView inputView = (SignatureInputView) view.findViewById(R.id.sig__input_view);
+        final SignatureInputView inputView = view.findViewById(R.id.sig__input_view);
 
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.sig__default_dialog_title)
@@ -55,7 +50,8 @@ public class SignatureDialogBuilder {
                 });
     }
 
-    protected View buildView(Activity activity){
+    @SuppressLint("InflateParams")
+    private View buildView(Activity activity){
         return activity.getLayoutInflater()
                 .inflate(R.layout.sig__default_dialog, null, false);
     }

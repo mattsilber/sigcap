@@ -1,21 +1,18 @@
 buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven { url 'https://maven.google.com/' }
-    }
+    ext.kotlin_version = '1.3.61'
+
+    apply from: 'versions.gradle'
+    addRepos(repositories)
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.3'
+        classpath 'com.android.tools.build:gradle:3.6.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
 }
 
 allprojects {
-    repositories {
-        mavenLocal()
-        jcenter()
-        maven { url 'https://maven.google.com/' }
-    }
+    addRepos(repositories)
 }
 
 task clean(type: Delete) {

@@ -1,5 +1,6 @@
 package com.guardanis.sigcap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class SignatureInputView extends View implements View.OnTouchListener {
 
-    private List<List<Path>> signaturePaths = new ArrayList<List<Path>>();
+    private List<List<Path>> signaturePaths = new ArrayList<>();
     private List<Path> activeSignaturePaths;
     private Paint signaturePaint;
 
@@ -49,7 +50,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         initAttributes(attrs, defStyleAttr);
     }
 
-    protected void initDefaultValues(){
+    protected void initDefaultValues() {
         setOnTouchListener(this);
 
         signaturePaint = new Paint();
@@ -72,14 +73,14 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         baselineXMarkOffsetVertical = (int) getResources().getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical);
     }
 
-    protected void initAttributes(AttributeSet attrs, int defStyle){
-        if(attrs == null)
+    protected void initAttributes(AttributeSet attrs, int defStyle) {
+        if (attrs == null)
             return;
 
         TypedArray a = getContext().getTheme()
                 .obtainStyledAttributes(attrs, R.styleable.SignatureInputView, defStyle, 0);
 
-        try{
+        try {
             signaturePaint.setColor(a.getColor(R.styleable.SignatureInputView_signatureColor,
                     getResources().getColor(R.color.sig__default_signature)));
 
@@ -97,28 +98,28 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
             baselineXMarkOffsetVertical = a.getInt(R.styleable.SignatureInputView_baseline_x_mark_offsetVertical,
                     (int) getResources().getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical));
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            a.recycle();
         }
-        catch(Throwable e){ e.printStackTrace(); }
-        finally { a.recycle(); }
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent e) {
-        int[] event = new int[]{ (int) e.getX(), (int) e.getY() };
+        int[] event = new int[]{(int) e.getX(), (int) e.getY()};
 
-        if(e.getAction() == MotionEvent.ACTION_UP){
+        if (e.getAction() == MotionEvent.ACTION_UP) {
             lastTouchEvent = null;
 
             signaturePaths.add(activeSignaturePaths);
-            activeSignaturePaths = new ArrayList<Path>();
-        }
-        else if(e.getAction() == MotionEvent.ACTION_DOWN){
-            if(!(activeSignaturePaths == null || activeSignaturePaths.size() < 1))
+            activeSignaturePaths = new ArrayList<>();
+        } else if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            if (!(activeSignaturePaths == null || activeSignaturePaths.size() < 1))
                 signaturePaths.add(activeSignaturePaths);
 
-            activeSignaturePaths = new ArrayList<Path>();
-        }
-        else{
+            activeSignaturePaths = new ArrayList<>();
+        } else {
             Path path = new Path();
             path.moveTo(lastTouchEvent[0], lastTouchEvent[1]);
             path.lineTo(event[0], event[1]);
@@ -133,8 +134,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void undoLastSignaturePath(){
-        if(0 < signaturePaths.size()){
+    public void undoLastSignaturePath() {
+        if (0 < signaturePaths.size()) {
             signaturePaths.remove(signaturePaths.size() - 1);
 
             postInvalidate();
@@ -142,14 +143,14 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     @Override
-    public void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         drawIndicators(canvas);
         drawSignaturePaths(canvas);
     }
 
-    protected void drawIndicators(Canvas canvas){
+    protected void drawIndicators(Canvas canvas) {
         canvas.drawLine(baselinePaddingHorizontal,
                 canvas.getHeight() - baselinePaddingBottom,
                 canvas.getWidth() - baselinePaddingHorizontal,
@@ -159,7 +160,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         drawXMark(canvas);
     }
 
-    protected void drawXMark(Canvas canvas){
+    protected void drawXMark(Canvas canvas) {
         int radius = baselineXMark / 2;
         int cX = baselinePaddingHorizontal + radius;
         int cY = canvas.getHeight() - baselinePaddingBottom - radius - baselineXMarkOffsetVertical;
@@ -175,16 +176,17 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         canvas.restore();
     }
 
-    protected void drawSignaturePaths(Canvas canvas){
-        for(List<Path> l : signaturePaths)
-            for(Path p : l)
+    protected void drawSignaturePaths(Canvas canvas) {
+        for (List<Path> l : signaturePaths)
+            for (Path p : l)
                 canvas.drawPath(p, signaturePaint);
 
-        if(activeSignaturePaths != null)
-            for(Path p : activeSignaturePaths)
+        if (activeSignaturePaths != null)
+            for (Path p : activeSignaturePaths)
                 canvas.drawPath(p, signaturePaint);
     }
 
+    @SuppressLint("WrongThread")
     public File saveSignature() throws Exception {
         File file = new FileCache(getContext())
                 .getFile(String.valueOf(System.currentTimeMillis()));
@@ -199,7 +201,16 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return file;
     }
 
-    public boolean isSignatureInputAvailable(){
+    public boolean isSignatureInputAvailable() {
         return !(signaturePaths.size() < 1 && (activeSignaturePaths == null || activeSignaturePaths.size() < 1));
+    }
+
+    List<List<Path>> getSignaturePaths() {
+        return  signaturePaths;
+    }
+
+    void setSignaturePaths(List<List<Path>> paths) {
+        signaturePaths = paths;
+        postInvalidate();
     }
 }

@@ -1,0 +1,12 @@
+/**
+ * Shared file between builds so that they can all use the same dependencies and
+ * maven repositories.
+ **/
+
+static def addRepos(RepositoryHandler handler) {
+    handler.mavenLocal()
+    handler.mavenCentral()
+    handler.jcenter()
+    handler.google()
+}
+ext.addRepos = this.&addRepos
