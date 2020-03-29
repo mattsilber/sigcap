@@ -10,13 +10,15 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SignatureInputView extends View implements View.OnTouchListener {
 
-    private List<List<Path>> signaturePaths = new ArrayList<List<Path>>();
-    private List<Path> activeSignaturePaths = new ArrayList<Path>();
+    private List<List<Path>> signaturePaths = new ArrayList<>();
+    private List<Path> activeSignaturePaths = new ArrayList<>();
 
     private SignatureRequest request = new SignatureRequest();
     private SignatureTouchController touchController = new SignatureTouchController();
@@ -45,8 +47,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         initAttributes(attrs, defStyleAttr);
     }
 
-    protected void initAttributes(AttributeSet attrs, int defStyle){
-        if(attrs == null) {
+    protected void initAttributes(AttributeSet attrs, int defStyle) {
+        if (attrs == null) {
             this.renderer = SignatureRenderer.createDefaultInstance(getResources());
 
             return;
@@ -55,14 +57,16 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         TypedArray a = getContext().getTheme()
                 .obtainStyledAttributes(attrs, R.styleable.SignatureInputView, defStyle, 0);
 
-        try{
+        try {
             this.renderer = generateSignatureRenderer(a);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        } finally {
+            a.recycle();
         }
-        catch(Throwable e){ e.printStackTrace(); }
-        finally { a.recycle(); }
     }
 
-    protected SignatureRenderer generateSignatureRenderer(TypedArray attributes) {
+    protected SignatureRenderer generateSignatureRenderer(@NotNull TypedArray attributes) {
         Paint signaturePaint = SignatureRenderer.createDefaultSignaturePaint(getResources());
         signaturePaint.setColor(attributes.getColor(R.styleable.SignatureInputView_signatureColor,
                 getResources().getColor(R.color.sig__default_signature)));
@@ -105,8 +109,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return true;
     }
 
-    public void undoLastSignaturePath(){
-        if(0 < signaturePaths.size()){
+    public void undoLastSignaturePath() {
+        if (0 < signaturePaths.size()) {
             signaturePaths.remove(signaturePaths.size() - 1);
 
             postInvalidate();
@@ -114,7 +118,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     @Override
-    public void onDraw(Canvas canvas){
+    public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
         renderer.drawBaseline(canvas);
@@ -122,8 +126,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         renderer.drawPathGroups(canvas, signaturePaths);
         renderer.drawPaths(canvas, activeSignaturePaths);
 
-        this.lastRenderBounds[0] = canvas.getWidth();
-        this.lastRenderBounds[1] = canvas.getHeight();
+        this.lastRenderBounds[0] = getWidth();
+        this.lastRenderBounds[1] = getHeight();
     }
 
     public Bitmap renderToBitmap() {
@@ -134,7 +138,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return new SignatureResponse(renderToBitmap());
     }
 
-    public boolean isSignatureInputAvailable(){
+    public boolean isSignatureInputAvailable() {
         return !(signaturePaths.size() < 1 && activeSignaturePaths.size() < 1);
     }
 
@@ -151,7 +155,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     List<List<Path>> getSignaturePaths() {
-        return  signaturePaths;
+        return signaturePaths;
     }
 
     void setSignaturePaths(List<List<Path>> paths) {

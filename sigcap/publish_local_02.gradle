@@ -1,13 +1,8 @@
 apply plugin: 'maven'
 
 // Maven repository info
-group = 'com.guardanis'
-version = '1.1.0'
-
-ext {
-    //Specify your maven repository url here
-    repositoryUrl = 'ftp://your.maven.repository.com/maven2'
-}
+group = publishedGroupId
+version = libraryVersion
 
 //Upload android library to maven with javadoc and android sources
 configurations {
@@ -43,10 +38,7 @@ uploadArchives {
     repositories {
         mavenDeployer {
             configuration = configurations.deployerJars
-            repository(url: mavenLocal().getUrl()) {
-                //if your repository needs authentication
-                authentication(userName: "username", password: "password")
-            }
+            repository(url: mavenLocal().getUrl())
         }
     }
 }

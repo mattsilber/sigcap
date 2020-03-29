@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class SignatureRenderer {
@@ -20,19 +22,19 @@ public class SignatureRenderer {
 
     public SignatureRenderer() { }
 
-    public void drawPathGroups(Canvas canvas, List<List<Path>> signaturePathGroups) {
+    public void drawPathGroups(Canvas canvas, @NotNull List<List<Path>> signaturePathGroups) {
         for (List<Path> pathGroup : signaturePathGroups) {
             drawPaths(canvas, pathGroup);
         }
     }
 
-    public void drawPaths(Canvas canvas, List<Path> signaturePaths) {
+    public void drawPaths(Canvas canvas, @NotNull List<Path> signaturePaths) {
         for (Path path : signaturePaths) {
             canvas.drawPath(path, signaturePaint);
         }
     }
 
-    public void drawBaseline(Canvas canvas) {
+    public void drawBaseline(@NotNull Canvas canvas) {
         canvas.drawLine(
                 baselinePaddingHorizontal,
                 canvas.getHeight() - baselinePaddingBottom,
@@ -41,7 +43,7 @@ public class SignatureRenderer {
                 baselinePaint);
     }
 
-    public void drawBaselineXMark(Canvas canvas) {
+    public void drawBaselineXMark(@NotNull Canvas canvas) {
         int radius = baselineXMark / 2;
         int cX = baselinePaddingHorizontal + radius;
         int cY = canvas.getHeight() - baselinePaddingBottom - radius - baselineXMarkOffsetVertical;
@@ -58,9 +60,9 @@ public class SignatureRenderer {
     }
 
     public Bitmap renderToBitmap(
-            SignatureRequest request,
+            @NotNull SignatureRequest request,
             List<List<Path>> signaturePathGroups,
-            int[] renderBounds) {
+            @NotNull int[] renderBounds) {
 
         Bitmap bitmap = Bitmap.createBitmap(renderBounds[0], renderBounds[1], Bitmap.Config.ARGB_8888);
 
@@ -134,7 +136,8 @@ public class SignatureRenderer {
                 .setBaselineXMarkOffsetVertical(defaultBaselineXMarkOffsetVertical);
     }
 
-    public static Paint createDefaultSignaturePaint(Resources resources) {
+    @NotNull
+    public static Paint createDefaultSignaturePaint(@NotNull Resources resources) {
         Paint signaturePaint = new Paint();
         signaturePaint.setAntiAlias(true);
         signaturePaint.setColor(resources.getColor(R.color.sig__default_signature));
@@ -145,7 +148,8 @@ public class SignatureRenderer {
         return signaturePaint;
     }
 
-    public static Paint createDefaultBaselinePaint(Resources resources) {
+    @NotNull
+    public static Paint createDefaultBaselinePaint(@NotNull Resources resources) {
         Paint baselinePaint = new Paint();
         baselinePaint.setAntiAlias(true);
         baselinePaint.setColor(resources.getColor(R.color.sig__default_signature));

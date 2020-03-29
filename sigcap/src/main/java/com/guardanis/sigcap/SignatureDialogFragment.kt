@@ -5,16 +5,14 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.viewModels
 import com.guardanis.sigcap.viewmodel.SignatureViewModel
 
 class SignatureDialogFragment : AppCompatDialogFragment() {
 
-    private var eventListener: SignatureEventListener? = null
+    private lateinit var eventListener: SignatureEventListener
     private lateinit var inputView: SignatureInputView
     private val viewModel: SignatureViewModel by viewModels()
 
@@ -29,7 +27,6 @@ class SignatureDialogFragment : AppCompatDialogFragment() {
                 context
             }
             else -> {
-
                 val s = if (parentFragment != null) {
                     " or $parentFragment"
                 } else {
@@ -59,14 +56,14 @@ class SignatureDialogFragment : AppCompatDialogFragment() {
                         if (!inputView.isSignatureInputAvailable)
                             throw NoSignatureException("No signature found")
                         val saved = inputView.saveSignature()
-                        eventListener?.onSignatureEntered(saved)
+                        eventListener.onSignatureEntered(saved)
                     } catch (e: Exception) {
                         e.printStackTrace()
-                        eventListener?.onSignatureInputError(e)
+                        eventListener.onSignatureInputError(e)
                     }
                 }
                 .setNegativeButton(R.string.sig__default_dialog_action_cancel) { _, _ ->
-                    eventListener?.onSignatureInputCanceled()
+                    eventListener.onSignatureInputCanceled()
                 }
                 .create()
 
