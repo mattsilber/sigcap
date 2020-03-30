@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.sigcap.*
 
-class MainActivity: AppCompatActivity(), SignatureEventListener {
+class MainActivity : AppCompatActivity(), SignatureEventListener {
 
     override fun onCreate(savedInstance: Bundle?) {
         super.onCreate(savedInstance)
@@ -18,20 +18,18 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
 
     override fun onPause() {
         FileCache.clear(this)
-
         super.onPause()
     }
 
     fun startClicked(view: View?) {
-//        SignatureDialogBuilder()
-//                .setRequest(
-//                        SignatureRequest()
-//                                .setResultBackgroundColor(Color.TRANSPARENT)
-//                                .setResultIncludeBaseline(true)
-//                                .setResultIncludeBaselineXMark(true))
-//                .show(this, this)
-
-        SignatureDialogFragment().show(supportFragmentManager, "SignatureDialog")
+        SignatureDialogBuilder()
+                .setRequest(
+                        SignatureRequest()
+                                .setResultBackgroundColor(Color.TRANSPARENT)
+                                .setResultIncludeBaseline(true)
+                                .setResultIncludeBaselineXMark(true)
+                )
+                .show(supportFragmentManager, "SignatureDialog")
     }
 
     override fun onSignatureEntered(response: SignatureResponse) {

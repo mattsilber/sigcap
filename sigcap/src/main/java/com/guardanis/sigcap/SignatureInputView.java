@@ -146,6 +146,10 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         this.request = request;
     }
 
+    public SignatureRequest getSignatureRequest() {
+        return request;
+    }
+
     public void setSignatureRenderer(SignatureRenderer renderer) {
         this.renderer = renderer;
     }
@@ -154,11 +158,20 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return renderer;
     }
 
-    List<List<Path>> getSignaturePaths() {
+    /**
+     * Get signature paths.
+     * @author Yordan P. Dieguez
+     */
+    public List<List<Path>> getSignaturePaths() {
         return signaturePaths;
     }
 
-    void setSignaturePaths(List<List<Path>> paths) {
+    /**
+     * Set paths and paint signature.
+     * @param paths Paths
+     * @author Yordan P. Dieguez
+     */
+    public void setSignaturePaths(List<List<Path>> paths) {
         signaturePaths = paths;
         postInvalidate();
     }
