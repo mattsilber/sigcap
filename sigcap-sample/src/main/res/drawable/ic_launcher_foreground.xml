@@ -1,0 +1,11 @@
+<!-- drawable/signature.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="57.142857"
+    android:viewportHeight="57.142857">
+  <group android:translateX="16.571428"
+      android:translateY="16.571428">
+      <path android:fillColor="#fff" android:pathData="M22,22H2V20H22V22M2.26,16.83L5.09,14L2.26,11.17L3.67,9.76L6.5,12.59L9.33,9.76L10.74,11.17L7.91,14L10.74,16.83L9.33,18.24L6.5,15.41L3.67,18.24L2.26,16.83Z" />
+  </group>
+</vector>

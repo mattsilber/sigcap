@@ -3,15 +3,17 @@ package com.guardanis.sigcap;
 import android.graphics.Path;
 import android.view.MotionEvent;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class SignatureTouchController {
+class SignatureTouchController {
 
     private float[] lastTouchEvent;
 
-    public void handleTouchEvent(
-            MotionEvent event,
+    void handleTouchEvent(
+            @NotNull MotionEvent event,
             List<List<Path>> signaturePaths,
             List<Path> activeSignaturePaths) {
 
@@ -23,13 +25,13 @@ public class SignatureTouchController {
             case MotionEvent.ACTION_UP:
                 this.lastTouchEvent = null;
 
-                signaturePaths.add(new ArrayList<Path>(activeSignaturePaths));
+                signaturePaths.add(new ArrayList<>(activeSignaturePaths));
                 activeSignaturePaths.clear();
 
                 break;
             case MotionEvent.ACTION_DOWN:
                 if(0 < activeSignaturePaths.size())
-                    signaturePaths.add(new ArrayList<Path>(activeSignaturePaths));
+                    signaturePaths.add(new ArrayList<>(activeSignaturePaths));
 
                 activeSignaturePaths.clear();
 

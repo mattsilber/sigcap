@@ -1,4 +1,1 @@
-<manifest
-    package="com.guardanis.sigcap">
-
-</manifest>
+<manifest package="com.guardanis.sigcap"/>
