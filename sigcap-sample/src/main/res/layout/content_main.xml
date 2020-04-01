@@ -16,25 +16,58 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:adjustViewBounds="true"
-        app:layout_constraintBottom_toTopOf="@+id/appCompatButton"
+        app:layout_constraintBottom_toTopOf="@+id/main__buttons_parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/appCompatButton"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/main__buttons_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:background="@color/base__primary"
-        android:gravity="center"
-        android:onClick="startClicked"
-        android:padding="24dp"
-        android:text="@string/start_signing"
-        android:textAllCaps="true"
-        android:textColor="@color/base__text_white"
-        android:textSize="12sp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/base__primary"
+            android:gravity="center"
+            android:onClick="startClicked"
+            android:padding="24dp"
+            android:text="@string/start_signing"
+            android:textAllCaps="true"
+            android:textColor="@color/base__text_white"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/base__primary"
+            android:gravity="center"
+            android:onClick="startAppCompatClicked"
+            android:padding="24dp"
+            android:text="@string/start_signing_app_compat"
+            android:textAllCaps="true"
+            android:textColor="@color/base__text_white"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/base__primary"
+            android:gravity="center"
+            android:onClick="startStatelessClicked"
+            android:padding="24dp"
+            android:text="@string/start_signing_stateless"
+            android:textAllCaps="true"
+            android:textColor="@color/base__text_white"
+            android:textSize="12sp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

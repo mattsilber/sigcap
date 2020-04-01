@@ -1,5 +1,6 @@
 buildscript {
     dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.novoda:gradle-android-command-plugin:2.1.0'
 
@@ -10,12 +11,14 @@ buildscript {
 }
 
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 29
     }
 
@@ -27,17 +30,25 @@ android {
     }
 }
 
+dependencies {
+    releaseImplementation project(path: ':sigcap') // "com.guardanis:sigcap:2.0.0"
+    debugImplementation project(path: ':sigcap')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+}
+
 group = 'com.guardanis'
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'sigcap'
+    bintrayName = 'sigcap-androidx'
 
     publishedGroupId = 'com.guardanis'
-    libraryName = 'sigcap'
-    artifact = 'sigcap'
+    libraryName = 'sigcap-androidx'
+    artifact = 'sigcap-androidx'
 
-    libraryDescription = 'Easily capture signatures'
+    libraryDescription = 'Easily capture signatures (androidx / kotlin components'
     libraryVersion = '2.0.0'
 
     developerId = 'mattsilber'

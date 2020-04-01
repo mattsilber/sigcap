@@ -2,22 +2,20 @@ package com.guardanis.sigcap;
 
 import android.content.Context;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 
 public class FileCache {
 
     private File cacheDir;
 
-    FileCache(@NotNull Context context) {
+    FileCache(Context context) {
         cacheDir = new File(context.getFilesDir().getAbsolutePath() + "/sigcap/");
 
         if(!cacheDir.exists())
             cacheDir.mkdirs();
     }
 
-    File getFile(@NotNull String url) {
+    File getFile(String url) {
         return new File(cacheDir, String.valueOf(url.hashCode()));
     }
 

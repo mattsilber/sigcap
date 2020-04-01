@@ -5,23 +5,27 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import org.jetbrains.annotations.NotNull;
+import com.guardanis.sigcap.paths.SignaturePath;
+import com.guardanis.sigcap.paths.SignaturePathManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SignatureInputView extends View implements View.OnTouchListener {
 
-    private List<List<Path>> signaturePaths = new ArrayList<>();
-    private List<Path> activeSignaturePaths = new ArrayList<>();
+    public static final String KEY__SIGNATURE_REQUEST = "sdf__request";
+    public static final String KEY__SIGNATURE_RENDERER = "sdf__renderer";
+    public static final String KEY__SIGNATURE_PATH_MANAGER = "sdf__path_manager";
 
     private SignatureRequest request = new SignatureRequest();
-    private SignatureTouchController touchController = new SignatureTouchController();
+    private SignaturePathManager pathManager = new SignaturePathManager();
+    private SignatureTouchDelegate touchDelegate = new SignatureTouchDelegate();
     private SignatureRenderer renderer;
 
     private int[] lastRenderBounds = new int[2];
@@ -59,21 +63,19 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
         try {
             this.renderer = generateSignatureRenderer(a);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        } finally {
-            a.recycle();
         }
+        catch (Throwable e) { e.printStackTrace(); }
+        finally { a.recycle(); }
     }
 
-    protected SignatureRenderer generateSignatureRenderer(@NotNull TypedArray attributes) {
-        Paint signaturePaint = SignatureRenderer.createDefaultSignaturePaint(getResources());
-        signaturePaint.setColor(attributes.getColor(R.styleable.SignatureInputView_signatureColor,
-                getResources().getColor(R.color.sig__default_signature)));
+    protected SignatureRenderer generateSignatureRenderer(TypedArray attributes) {
+        int signatureColor = attributes.getColor(
+                R.styleable.SignatureInputView_signatureColor,
+                getResources().getColor(R.color.sig__default_signature));
 
-        Paint baselinePaint = SignatureRenderer.createDefaultBaselinePaint(getResources());
-        baselinePaint.setColor(attributes.getColor(R.styleable.SignatureInputView_baselineColor,
-                getResources().getColor(R.color.sig__default_baseline)));
+        int baselineColor = attributes.getColor(
+                R.styleable.SignatureInputView_baselineColor,
+                getResources().getColor(R.color.sig__default_baseline));
 
         int baselinePaddingHorizontal = attributes.getInt(
                 R.styleable.SignatureInputView_baseline_paddingHorizontal,
@@ -91,9 +93,9 @@ public class SignatureInputView extends View implements View.OnTouchListener {
                 R.styleable.SignatureInputView_baseline_x_mark_offsetVertical,
                 (int) getResources().getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical));
 
-        return new SignatureRenderer()
-                .setSignaturePaint(signaturePaint)
-                .setBaselinePaint(baselinePaint)
+        return new SignatureRenderer(getResources())
+                .setSignaturePaintColor(signatureColor)
+                .setBaselinePaintColor(baselineColor)
                 .setBaselinePaddingBottom(baselinePaddingBottom)
                 .setBaselinePaddingHorizontal(baselinePaddingHorizontal)
                 .setBaselineXMark(baselineXMark)
@@ -101,8 +103,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent e) {
-        touchController.handleTouchEvent(e, signaturePaths, activeSignaturePaths);
+    public boolean onTouch(View view, MotionEvent event) {
+        touchDelegate.delegate(view, event, pathManager);
 
         postInvalidate();
 
@@ -110,11 +112,9 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     public void undoLastSignaturePath() {
-        if (0 < signaturePaths.size()) {
-            signaturePaths.remove(signaturePaths.size() - 1);
+        pathManager.undoLastPath();
 
-            postInvalidate();
-        }
+        postInvalidate();
     }
 
     @Override
@@ -123,15 +123,39 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
         renderer.drawBaseline(canvas);
         renderer.drawBaselineXMark(canvas);
-        renderer.drawPathGroups(canvas, signaturePaths);
-        renderer.drawPaths(canvas, activeSignaturePaths);
+        renderer.drawPathManager(canvas, pathManager);
 
         this.lastRenderBounds[0] = getWidth();
         this.lastRenderBounds[1] = getHeight();
     }
 
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        SignatureState state = new SignatureState(super.onSaveInstanceState());
+        state.signatureData.putParcelable(KEY__SIGNATURE_REQUEST, request);
+        state.signatureData.putParcelable(KEY__SIGNATURE_RENDERER, renderer);
+        state.signatureData.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager);
+
+        return state;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SignatureState)) {
+            super.onRestoreInstanceState(state);
+
+            return;
+        }
+
+        SignatureState signatureState = (SignatureState) state;
+
+        this.request = signatureState.signatureData.getParcelable(KEY__SIGNATURE_REQUEST);
+        this.renderer = signatureState.signatureData.getParcelable(KEY__SIGNATURE_RENDERER);
+        this.pathManager = signatureState.signatureData.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
+    }
+
     public Bitmap renderToBitmap() {
-        return renderer.renderToBitmap(request, signaturePaths, lastRenderBounds);
+        return renderer.renderToBitmap(request, pathManager, lastRenderBounds);
     }
 
     public SignatureResponse saveSignature() {
@@ -139,7 +163,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     public boolean isSignatureInputAvailable() {
-        return !(signaturePaths.size() < 1 && activeSignaturePaths.size() < 1);
+        return pathManager.isSignatureInputAvailable();
     }
 
     public void setSignatureRequest(SignatureRequest request) {
@@ -152,27 +176,62 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
     public void setSignatureRenderer(SignatureRenderer renderer) {
         this.renderer = renderer;
+        this.postInvalidate();
     }
 
     public SignatureRenderer getSignatureRenderer() {
         return renderer;
     }
 
+    public SignaturePathManager getPathManager() {
+        return pathManager;
+    }
+
+    public void setPathManager(SignaturePathManager pathManager) {
+        this.pathManager = pathManager;
+        this.postInvalidate();
+    }
+
     /**
      * Get signature paths.
      * @author Yordan P. Dieguez
      */
-    public List<List<Path>> getSignaturePaths() {
-        return signaturePaths;
+    public List<SignaturePath> getSignaturePaths() {
+        return pathManager.getPaths();
     }
 
-    /**
-     * Set paths and paint signature.
-     * @param paths Paths
-     * @author Yordan P. Dieguez
-     */
-    public void setSignaturePaths(List<List<Path>> paths) {
-        signaturePaths = paths;
-        postInvalidate();
+    protected static class SignatureState extends BaseSavedState {
+
+        Bundle signatureData;
+
+        SignatureState(Parcelable state) {
+            super(state);
+        }
+
+        SignatureState(Parcel in) {
+            super(in);
+
+            this.signatureData = in.readBundle();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            super.writeToParcel(dest, flags);
+
+            dest.writeBundle(this.signatureData);
+        }
+
+        public static final Parcelable.Creator<SignatureState> CREATOR = new Parcelable.Creator<SignatureState>() {
+
+            @Override
+            public SignatureState createFromParcel(Parcel in) {
+                return new SignatureState(in);
+            }
+
+            @Override
+            public SignatureState[] newArray(int size) {
+                return new SignatureState[size];
+            }
+        };
     }
 }

@@ -7,8 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.sigcap.*
+import com.guardanis.sigcap.androidx.showAppCompat
 
-class MainActivity : AppCompatActivity(), SignatureEventListener {
+class MainActivity: AppCompatActivity(), SignatureEventListener {
 
     override fun onCreate(savedInstance: Bundle?) {
         super.onCreate(savedInstance)
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity(), SignatureEventListener {
 
     override fun onPause() {
         FileCache.clear(this)
+
         super.onPause()
     }
 
@@ -29,7 +31,29 @@ class MainActivity : AppCompatActivity(), SignatureEventListener {
                                 .setResultIncludeBaseline(true)
                                 .setResultIncludeBaselineXMark(true)
                 )
-                .show(supportFragmentManager, "SignatureDialog")
+                .show(fragmentManager, "SignatureDialog")
+    }
+
+    fun startAppCompatClicked(view: View?) {
+        SignatureDialogBuilder()
+                .setRequest(
+                        SignatureRequest()
+                                .setResultBackgroundColor(Color.TRANSPARENT)
+                                .setResultIncludeBaseline(true)
+                                .setResultIncludeBaselineXMark(true)
+                )
+                .showAppCompat(supportFragmentManager, "SignatureDialog")
+    }
+
+    fun startStatelessClicked(view: View?) {
+        SignatureDialogBuilder()
+                .setRequest(
+                        SignatureRequest()
+                                .setResultBackgroundColor(Color.TRANSPARENT)
+                                .setResultIncludeBaseline(true)
+                                .setResultIncludeBaselineXMark(true)
+                )
+                .showStateless(this, this)
     }
 
     override fun onSignatureEntered(response: SignatureResponse) {
