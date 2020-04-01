@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     compile('com.guardanis:sigcap:2+')
+    compile('com.guardanis:sigcap-androidx:2+')
 }
 ```
 
@@ -28,37 +29,75 @@ If you want to save the response to a file, you can call `SignatureResponse.save
 
 ### SignatureDialogBuilder
 
-This helper class is all you need to integrate `sigcap`, with text and colors easily overriden through the resources (same as the default resources mentioned above).
+This helper class is all you need to integrate `sigcap`, with text and colors easily overridden through the resources (same as the default resources mentioned above).
 
-Here's an example of how to call the SignatureDialogBuilder, from the gif example above:
+If all you want to do is show a Dialog and you don't care about orientation changes or state, just create a `SignatureEventListener` and pass it to your `SignatureDialogBuilder` instance:
 
 ```java
+SignatureEventListener eventListsner = new SignatureEventListener() {
+    
+    @Override
+    public void onSignatureEntered(SignatureResponse response) {
+        Bitmap signatureImage = response.getResult();
+                                                           
+        // Alternatively store the Bitmap response in a File
+        File savedFile = response.saveToFileCache()
+            .get();
+    }
+                                                   
+    @Override
+    public void onSignatureInputCanceled() {
+        Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
+            .show();
+    }
+                                                   
+    @Override
+    public void onSignatureInputError(Throwable e) {
+        if (e instanceof NoSignatureException) {
+            // They clicked confirm without entering anything
+        }
+        else {
+            Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
+                .show();
+        }
+     }                                                  
+};
+
 new SignatureDialogBuilder()
-        .show(this, new SignatureDialogBuilder.SignatureEventListener() {
-            @Override
-            public void onSignatureEntered(SignatureResponse response) {
-                Bitmap signatureImage = response.getResult();
-                
-                // Alternatively store the Bitmap response in a File
-                File savedFile = response.saveToFileCache()
-                    .get();
-            }
-            
-            @Override
-            public void onSignatureInputCanceled() {
-                Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
-                    .show();
-            }
-            
-            @Override
-            public void onSignatureInputError(Throwable e) {
-                if(e instanceof NoSignatureException) {
-                    // They clicked confirm without entering anything
-                }
-                else {
-                    Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
-                        .show();
-                }
-            }
-        });
+    .showStatelessAlertDialog(this, eventListsner);
+```
+
+Or you can create a `SignatureDialogFragment`:
+
+```java
+String tag = "fragment_tag";
+
+// Display the `SignatureDialogFragment`
+new SignatureDialogBuilder()
+    .showDialogFragment(this, tag, eventListsner);
+
+// Find the `SignatureDialogFragment` and set the `SignatureEventListener`
+// If your `Activity` or calling `Fragment` does not implement `SignatureEventListener`, you
+// will need to manually reset the `SignatureEventListener` when restoring.
+SignatureDialogFragment fragment = (SignatureDialogFragment) getFragmentManager()
+    .findFragmentByTag(tag);
+
+if (fragment != null) {
+    fragment.setSignatureEventListener(eventListsner);
+}
+```
+
+Or, using the `sigcap-androidx` components, you can create an `AppCompatSignatureDialogFragment`:
+
+```kotlin
+// Display the `AppCompatSignatureDialogFragment`
+SignatureDialogBuilder()
+    .showAppCompatDialogFragment(supportFragmentManager, tag, eventListener)
+    
+// Find the `AppCompatSignatureDialogFragment` and set the `SignatureEventListener`
+// If your `Activity` or calling `Fragment` does not implement `SignatureEventListener`, you
+// will need to manually reset the `SignatureEventListener` when restoring.
+supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
+    ?.setSignatureEventListener(eventListsner)
+
 ```
