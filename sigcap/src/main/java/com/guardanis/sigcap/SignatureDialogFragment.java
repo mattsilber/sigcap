@@ -31,6 +31,22 @@ public class SignatureDialogFragment extends DialogFragment {
     private WeakReference<SignatureEventListener> eventListener = new WeakReference<SignatureEventListener>(null);
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle arguments = getArguments();
+
+        SignatureRequest request = arguments.getParcelable(KEY__SIGNATURE_REQUEST);
+
+        if (request != null) {
+            this.request = request;
+        }
+
+        this.renderer = arguments.getParcelable(KEY__SIGNATURE_RENDERER);
+        this.pathManager = arguments.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
@@ -145,24 +161,6 @@ public class SignatureDialogFragment extends DialogFragment {
         this.request = savedInstanceState.getParcelable(KEY__SIGNATURE_REQUEST);
         this.renderer = savedInstanceState.getParcelable(KEY__SIGNATURE_RENDERER);
         this.pathManager = savedInstanceState.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
-    }
-
-    public SignatureDialogFragment setSignatureRequest(SignatureRequest request) {
-        this.request = request;
-
-        return this;
-    }
-
-    public SignatureDialogFragment setSignatureRenderer(SignatureRenderer renderer) {
-        this.renderer = renderer;
-
-        return this;
-    }
-
-    public SignatureDialogFragment setSignaturePathManager(SignaturePathManager pathManager) {
-        this.pathManager = pathManager;
-
-        return this;
     }
 
     public SignatureDialogFragment setSignatureEventListener(SignatureEventListener eventListener) {

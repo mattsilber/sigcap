@@ -22,14 +22,25 @@ import java.lang.ref.WeakReference
  * otherwise it will throw an [RuntimeException]
  *
  * @author Yordan P. Dieguez
+ * @author Matt Silber
  */
-class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
+open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
 
     private var eventListener: WeakReference<SignatureEventListener> = WeakReference<SignatureEventListener>(null)
 
-    private var request: SignatureRequest? = null
+    private var request: SignatureRequest = SignatureRequest()
     private var renderer: SignatureRenderer? = null
     private var pathManager: SignaturePathManager? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val arguments = this.arguments ?: return
+
+        this.request = arguments.getParcelable<SignatureRequest>(KEY__SIGNATURE_REQUEST) ?: this.request
+        this.renderer = arguments.getParcelable(KEY__SIGNATURE_RENDERER)
+        this.pathManager = arguments.getParcelable(KEY__SIGNATURE_PATH_MANAGER)
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -62,7 +73,7 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
         val view: View = buildView(activity)
 
         val inputView = view.findViewById<SignatureInputView>(R.id.sig__input_view)
-        inputView.signatureRequest = request ?: inputView.signatureRequest
+        inputView.signatureRequest = request
         inputView.signatureRenderer = renderer ?: inputView.signatureRenderer
         inputView.pathManager = pathManager ?: inputView.pathManager
 
@@ -100,10 +111,6 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
         return dialog
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     protected fun buildView(activity: Activity): View {
         return activity.layoutInflater
                 .inflate(com.guardanis.sigcap.R.layout.sig__default_dialog, null, false)
@@ -120,39 +127,9 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
         super.onViewStateRestored(savedInstanceState)
 
-        this.request = savedInstanceState?.getParcelable(KEY__SIGNATURE_REQUEST)
+        this.request = savedInstanceState?.getParcelable(KEY__SIGNATURE_REQUEST) ?: request
         this.renderer = savedInstanceState?.getParcelable(KEY__SIGNATURE_RENDERER)
         this.pathManager = savedInstanceState?.getParcelable(KEY__SIGNATURE_PATH_MANAGER)
-    }
-
-    /**
-     * Pass an [SignatureRequest] object before show the dialog.
-     * @param request [SignatureRequest] object
-     * @return [SignatureDialogFragment]
-     * @author Yordan P. Dieguez
-     */
-    fun setSignatureRequest(request: SignatureRequest): AppCompatSignatureDialogFragment {
-        this.request = request
-
-        return this
-    }
-
-    /**
-     * Pass an [SignatureRenderer] object before show the dialog.
-     * @param renderer [SignatureRenderer] object
-     * @return [SignatureDialogFragment]
-     * @author Yordan P. Dieguez
-     */
-    fun setSignatureRenderer(renderer: SignatureRenderer?): AppCompatSignatureDialogFragment {
-        this.renderer = renderer
-
-        return this
-    }
-
-    fun setSignaturePathManager(pathManager: SignaturePathManager?): AppCompatSignatureDialogFragment {
-        this.pathManager = pathManager
-
-        return this
     }
 
     fun setSignatureEventListener(eventListener: SignatureEventListener?): AppCompatSignatureDialogFragment {

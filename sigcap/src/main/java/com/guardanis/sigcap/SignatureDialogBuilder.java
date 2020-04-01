@@ -5,9 +5,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.View;
 
 import com.guardanis.sigcap.paths.SignaturePathManager;
+
+import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_PATH_MANAGER;
+import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_RENDERER;
+import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
 
 /**
  * Helper class to show dialog.
@@ -87,12 +92,15 @@ public class SignatureDialogBuilder {
             String tag,
             SignatureEventListener eventListener) {
 
-        new SignatureDialogFragment()
-                .setSignatureRequest(request)
-                .setSignatureRenderer(renderer)
-                .setSignaturePathManager(pathManager)
-                .setSignatureEventListener(eventListener)
-                .show(fragmentManager, tag);
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(KEY__SIGNATURE_REQUEST, request);
+        arguments.putParcelable(KEY__SIGNATURE_RENDERER, renderer);
+        arguments.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager);
+
+        SignatureDialogFragment fragment = new SignatureDialogFragment();
+        fragment.setArguments(arguments);
+        fragment.setSignatureEventListener(eventListener);
+        fragment.show(fragmentManager, tag);
     }
 
     public AlertDialog showStatelessAlertDialog(Activity activity, final SignatureEventListener eventListener) {
