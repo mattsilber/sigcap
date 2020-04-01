@@ -7,7 +7,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.sigcap.*
-import com.guardanis.sigcap.androidx.showAppCompat
+import com.guardanis.sigcap.androidx.findAppCompatSignatureDialogFragment
+import com.guardanis.sigcap.androidx.showAppCompatDialogFragment
 
 class MainActivity: AppCompatActivity(), SignatureEventListener {
 
@@ -23,6 +24,19 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
         super.onPause()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        // If our DialogFragment exists, we must reset the SignatureEventListener
+        supportFragmentManager.findAppCompatSignatureDialogFragment(SignatureDialogFragment.DEFAULT_DIALOG_TAG)
+                ?.setSignatureEventListener(this)
+
+        // If our DialogFragment exists, we must reset the SignatureEventListener
+        fragmentManager.findFragmentByTag(SignatureDialogFragment.DEFAULT_DIALOG_TAG)
+                ?.let({ it as? SignatureDialogFragment })
+                ?.setSignatureEventListener(this)
+    }
+
     fun startClicked(view: View?) {
         SignatureDialogBuilder()
                 .setRequest(
@@ -31,7 +45,7 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
                                 .setResultIncludeBaseline(true)
                                 .setResultIncludeBaselineXMark(true)
                 )
-                .show(fragmentManager, "SignatureDialog")
+                .showDialogFragment(fragmentManager, SignatureDialogFragment.DEFAULT_DIALOG_TAG, this)
     }
 
     fun startAppCompatClicked(view: View?) {
@@ -42,7 +56,7 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
                                 .setResultIncludeBaseline(true)
                                 .setResultIncludeBaselineXMark(true)
                 )
-                .showAppCompat(supportFragmentManager, "SignatureDialog")
+                .showAppCompatDialogFragment(supportFragmentManager, eventListener = this)
     }
 
     fun startStatelessClicked(view: View?) {
@@ -53,7 +67,7 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
                                 .setResultIncludeBaseline(true)
                                 .setResultIncludeBaselineXMark(true)
                 )
-                .showStateless(this, this)
+                .showStatelessAlertDialog(this, this)
     }
 
     override fun onSignatureEntered(response: SignatureResponse) {

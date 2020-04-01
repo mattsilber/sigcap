@@ -68,6 +68,13 @@ public class SignatureDialogBuilder {
         return pathManager;
     }
 
+    public void showDialogFragment(
+            FragmentManager fragmentManager,
+            SignatureEventListener eventListener) {
+
+        showDialogFragment(fragmentManager, SignatureDialogFragment.DEFAULT_DIALOG_TAG, eventListener);
+    }
+
     /**
      * Show the dialog.
      *
@@ -75,15 +82,20 @@ public class SignatureDialogBuilder {
      *                        or {@link android.app.Fragment}.
      * @author Yordan P. Dieguez
      */
-    public void show(FragmentManager fragmentManager, String tag) {
+    public void showDialogFragment(
+            FragmentManager fragmentManager,
+            String tag,
+            SignatureEventListener eventListener) {
+
         new SignatureDialogFragment()
-                .setRequest(request)
+                .setSignatureRequest(request)
                 .setSignatureRenderer(renderer)
-                .setPathManager(pathManager)
+                .setSignaturePathManager(pathManager)
+                .setSignatureEventListener(eventListener)
                 .show(fragmentManager, tag);
     }
 
-    public AlertDialog showStateless(Activity activity, final SignatureEventListener eventListener) {
+    public AlertDialog showStatelessAlertDialog(Activity activity, final SignatureEventListener eventListener) {
         final View view = activity.getLayoutInflater()
                 .inflate(R.layout.sig__default_dialog, null, false);
 

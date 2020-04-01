@@ -19,6 +19,8 @@ import java.util.List;
 
 public class SignatureInputView extends View implements View.OnTouchListener {
 
+    public static final String TAG = "signcap";
+
     public static final String KEY__SIGNATURE_REQUEST = "sdf__request";
     public static final String KEY__SIGNATURE_RENDERER = "sdf__renderer";
     public static final String KEY__SIGNATURE_PATH_MANAGER = "sdf__path_manager";
@@ -152,6 +154,8 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         this.request = signatureState.signatureData.getParcelable(KEY__SIGNATURE_REQUEST);
         this.renderer = signatureState.signatureData.getParcelable(KEY__SIGNATURE_RENDERER);
         this.pathManager = signatureState.signatureData.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
+
+        super.onRestoreInstanceState(signatureState.getSuperState());
     }
 
     public Bitmap renderToBitmap() {
@@ -202,7 +206,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
     protected static class SignatureState extends BaseSavedState {
 
-        Bundle signatureData;
+        Bundle signatureData = new Bundle();
 
         SignatureState(Parcelable state) {
             super(state);

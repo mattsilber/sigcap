@@ -5,7 +5,10 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.guardanis.sigcap.*
@@ -31,7 +34,7 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        this.eventListener = WeakReference(when {
+        this.eventListener = WeakReference<SignatureEventListener>(when {
             parentFragment is SignatureEventListener -> {
                 parentFragment as SignatureEventListener
             }
@@ -44,7 +47,9 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
                     else -> " or $parent"
                 }
 
-                throw RuntimeException("$context $errorParentName must implement SignatureEventListener")
+                Log.d(TAG, "SignatureDialogFragment's $activity $errorParentName are not a SignatureEventListener. You must manually set it.")
+
+                null
             }
         })
     }
@@ -95,6 +100,10 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
         return dialog
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     protected fun buildView(activity: Activity): View {
         return activity.layoutInflater
                 .inflate(com.guardanis.sigcap.R.layout.sig__default_dialog, null, false)
@@ -122,7 +131,7 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
      * @return [SignatureDialogFragment]
      * @author Yordan P. Dieguez
      */
-    fun setRequest(request: SignatureRequest): AppCompatSignatureDialogFragment {
+    fun setSignatureRequest(request: SignatureRequest): AppCompatSignatureDialogFragment {
         this.request = request
 
         return this
@@ -140,8 +149,14 @@ class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
         return this
     }
 
-    fun setPathManager(pathManager: SignaturePathManager?): AppCompatSignatureDialogFragment {
+    fun setSignaturePathManager(pathManager: SignaturePathManager?): AppCompatSignatureDialogFragment {
         this.pathManager = pathManager
+
+        return this
+    }
+
+    fun setSignatureEventListener(eventListener: SignatureEventListener?): AppCompatSignatureDialogFragment {
+        this.eventListener = WeakReference<SignatureEventListener>(eventListener)
 
         return this
     }

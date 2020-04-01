@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.os.Build;
 
@@ -20,6 +21,8 @@ import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_RENDERER;
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
 
 public class SignatureDialogFragment extends DialogFragment {
+
+    public static final String DEFAULT_DIALOG_TAG = "signcap__Default_dialog";
 
     private SignatureRequest request = new SignatureRequest();
     private SignatureRenderer renderer;
@@ -47,7 +50,7 @@ public class SignatureDialogFragment extends DialogFragment {
             return;
         }
 
-        throw new RuntimeException("A parent Fragment or Activity must be an instance of SignatureEventListener.");
+        Log.d(SignatureInputView.TAG, "SignatureDialogFragment's Activity or parent Fragment are not a SignatureEventListener. You must manually set it.");
     }
 
     @Override
@@ -144,7 +147,7 @@ public class SignatureDialogFragment extends DialogFragment {
         this.pathManager = savedInstanceState.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
     }
 
-    public SignatureDialogFragment setRequest(SignatureRequest request) {
+    public SignatureDialogFragment setSignatureRequest(SignatureRequest request) {
         this.request = request;
 
         return this;
@@ -156,8 +159,14 @@ public class SignatureDialogFragment extends DialogFragment {
         return this;
     }
 
-    public SignatureDialogFragment setPathManager(SignaturePathManager pathManager) {
+    public SignatureDialogFragment setSignaturePathManager(SignaturePathManager pathManager) {
         this.pathManager = pathManager;
+
+        return this;
+    }
+
+    public SignatureDialogFragment setSignatureEventListener(SignatureEventListener eventListener) {
+        this.eventListener = new WeakReference<SignatureEventListener>(eventListener);
 
         return this;
     }
