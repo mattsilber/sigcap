@@ -9,6 +9,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import com.guardanis.sigcap.*
 import com.guardanis.sigcap.androidx.findAppCompatSignatureDialogFragment
 import com.guardanis.sigcap.androidx.showAppCompatDialogFragment
+import com.guardanis.sigcap.dialog.SignatureDialogBuilder
+import com.guardanis.sigcap.dialog.SignatureDialogFragment
+import com.guardanis.sigcap.exceptions.NoSignatureException
 
 class MainActivity: AppCompatActivity(), SignatureEventListener {
 

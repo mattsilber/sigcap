@@ -6,13 +6,12 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.guardanis.sigcap.*
 import com.guardanis.sigcap.SignatureInputView.*
+import com.guardanis.sigcap.exceptions.NoSignatureException
 import com.guardanis.sigcap.paths.SignaturePathManager
 import java.lang.ref.WeakReference
 

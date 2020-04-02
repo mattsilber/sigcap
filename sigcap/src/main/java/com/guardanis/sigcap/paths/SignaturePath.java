@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.MotionEvent;
 
+import com.guardanis.sigcap.exceptions.BadSignaturePathException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +18,22 @@ public class SignaturePath implements Parcelable {
     public SignaturePath() { }
 
     protected SignaturePath(Parcel in) {
-        float[] stored = in.createFloatArray();
+        this(in.createFloatArray());
+    }
 
-        if (stored.length < 2)
+    public SignaturePath(float[] flattenedCoordinates) {
+        if (flattenedCoordinates.length < 2)
             return;
 
-        movePathTo(new Float[] { stored[0], stored[1] });
+        try {
+            movePathTo(new Float[] { flattenedCoordinates[0], flattenedCoordinates[1] });
 
-        for (int i = 2; i < stored.length; i += 2) {
-            addPathLineTo(new Float[] { stored[i], stored[i + 1] });
+            for (int i = 2; i < flattenedCoordinates.length; i += 2) {
+                addPathLineTo(new Float[] { flattenedCoordinates[i], flattenedCoordinates[i + 1] });
+            }
+        }
+        catch (Exception e) {
+            throw new BadSignaturePathException(e);
         }
     }
 
@@ -32,8 +41,11 @@ public class SignaturePath implements Parcelable {
         movePathTo(new Float[] { event.getX(), event.getY() });
     }
 
-    private void movePathTo(Float[] coordinates) {
+    protected void movePathTo(Float[] coordinates) {
         synchronized (path) {
+            if (!coordinateHistory.isEmpty())
+                throw new BadSignaturePathException("movePathTo should only be called once per SignaturePath instance");
+
             this.path.moveTo(coordinates[0], coordinates[1]);
             this.coordinateHistory.add(coordinates);
         }
@@ -43,8 +55,11 @@ public class SignaturePath implements Parcelable {
         addPathLineTo(new Float[] { event.getX(), event.getY() });
     }
 
-    private void addPathLineTo(Float[] coordinates) {
+    protected void addPathLineTo(Float[] coordinates) {
         synchronized (path) {
+            if (coordinateHistory.isEmpty())
+                throw new BadSignaturePathException("movePathTo must be called before addPathLineTo");
+
             this.path.lineTo(coordinates[0], coordinates[1]);
             this.coordinateHistory.add(coordinates);
         }
@@ -54,6 +69,10 @@ public class SignaturePath implements Parcelable {
         return path;
     }
 
+    public int getCoordinateHistorySize() {
+        return coordinateHistory.size();
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -61,16 +80,27 @@ public class SignaturePath implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        float[] flattened = new float[coordinateHistory.size() * 2];
+        dest.writeFloatArray(serializeCoordinateHistory());
+    }
 
-        for (int index = 0; index < flattened.length; index += 2) {
-            Float[] coordinate = coordinateHistory.get(index);
+    public float[] serializeCoordinateHistory() {
+        synchronized (path) {
+            int coordinateHistorySize = coordinateHistory.size();
+            int flattenedIndex = 0;
 
-            flattened[index] = coordinate[0];
-            flattened[index + 1] = coordinate[1];
+            float[] flattened = new float[coordinateHistorySize * 2];
+
+            for (int historyIndex = 0; historyIndex < coordinateHistorySize; historyIndex += 1) {
+                Float[] coordinate = coordinateHistory.get(historyIndex);
+
+                flattened[flattenedIndex] = coordinate[0];
+                flattened[flattenedIndex + 1] = coordinate[1];
+
+                flattenedIndex += 2;
+            }
+
+            return flattened;
         }
-
-        dest.writeFloatArray(flattened);
     }
 
     public static final Creator<SignaturePath> CREATOR = new Creator<SignaturePath>() {

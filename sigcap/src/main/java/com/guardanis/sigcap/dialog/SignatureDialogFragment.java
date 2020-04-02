@@ -1,4 +1,4 @@
-package com.guardanis.sigcap;
+package com.guardanis.sigcap.dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.os.Build;
 
+import com.guardanis.sigcap.exceptions.NoSignatureException;
+import com.guardanis.sigcap.R;
+import com.guardanis.sigcap.SignatureEventListener;
+import com.guardanis.sigcap.SignatureInputView;
+import com.guardanis.sigcap.SignatureRenderer;
+import com.guardanis.sigcap.SignatureRequest;
+import com.guardanis.sigcap.SignatureResponse;
 import com.guardanis.sigcap.paths.SignaturePathManager;
 
 import java.lang.ref.WeakReference;
@@ -22,7 +29,7 @@ import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
 
 public class SignatureDialogFragment extends DialogFragment {
 
-    public static final String DEFAULT_DIALOG_TAG = "signcap__Default_dialog";
+    public static final String DEFAULT_DIALOG_TAG = "signcap__default_dialog";
 
     private SignatureRequest request = new SignatureRequest();
     private SignatureRenderer renderer;

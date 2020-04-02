@@ -23,6 +23,10 @@ public class SignaturePathManager implements Parcelable {
 
     public void notifyTouchDown(MotionEvent event) {
         synchronized (paths) {
+            if (1 < activePath.getCoordinateHistorySize()) {
+                paths.add(activePath);
+            }
+
             this.activePath = new SignaturePath();
             this.activePath.movePathTo(event);
         }
