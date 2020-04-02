@@ -56,13 +56,17 @@ public class SignaturePathManager implements Parcelable {
     }
 
     public SignaturePathManager addPath(SignaturePath path) {
-        this.paths.add(path);
+        synchronized (paths) {
+            this.paths.add(path);
+        }
 
         return this;
     }
 
     public SignaturePathManager addAllPaths(List<SignaturePath> paths) {
-        this.paths.addAll(paths);
+        synchronized (paths) {
+            this.paths.addAll(paths);
+        }
 
         return this;
     }
@@ -80,7 +84,9 @@ public class SignaturePathManager implements Parcelable {
     }
 
     public SignaturePathManager clearSignaturePaths() {
-        this.paths.clear();
+        synchronized (paths) {
+            this.paths.clear();
+        }
 
         return this;
     }
