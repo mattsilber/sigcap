@@ -34,27 +34,28 @@ public class SignaturePathTests {
         assertEquals(joinToString(serialized), deserializedReserializedNormalized);
     }
 
-    @Test
-    public void testSignaturePathThrowsWhenMoveCalledMoreThanOnce() {
-        try {
-            TestSignaturePath path = new TestSignaturePath();
-            path.movePathTo(new Float[] { 0f, 0f });
-            path.movePathTo(new Float[] { 0f, 0f });
+    @Test(expected = BadSignaturePathException.class)
+    public void testSignaturePathThrowsWhenDeserializationFails() {
+        new SignaturePath(new float[] { 0f, 0f, 0f });
 
-            fail("BadSignaturePathException should have been thrown");
-        }
-        catch (BadSignaturePathException e) { }
+        fail("BadSignaturePathException should have been thrown");
     }
 
-    @Test
-    public void testSignaturePathThrowsWhenLineBeforeMove() {
-        try {
-            TestSignaturePath path = new TestSignaturePath();
-            path.addPathLineTo(new Float[] { 0f, 0f });
+    @Test(expected = BadSignaturePathException.class)
+    public void testSignaturePathThrowsWhenMoveCalledMoreThanOnce() {
+        TestSignaturePath path = new TestSignaturePath();
+        path.movePathTo(new Float[] { 0f, 0f });
+        path.movePathTo(new Float[] { 0f, 0f });
 
-            fail("BadSignaturePathException should have been thrown");
-        }
-        catch (BadSignaturePathException e) { }
+        fail("BadSignaturePathException should have been thrown");
+    }
+
+    @Test(expected = BadSignaturePathException.class)
+    public void testSignaturePathThrowsWhenLineBeforeMove() {
+        TestSignaturePath path = new TestSignaturePath();
+        path.addPathLineTo(new Float[] { 0f, 0f });
+
+        fail("BadSignaturePathException should have been thrown");
     }
 
     private String joinToString(float[] data) {
