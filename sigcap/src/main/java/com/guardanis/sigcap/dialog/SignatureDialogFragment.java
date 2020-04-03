@@ -31,9 +31,13 @@ public class SignatureDialogFragment extends DialogFragment {
 
     public static final String DEFAULT_DIALOG_TAG = "signcap__default_dialog";
 
+    public static final String KEY__AUTO_ATTACH_EVENT_LISTENER = "signcap__auto_attach_event_listsner";
+
     private SignatureRequest request = new SignatureRequest();
     private SignatureRenderer renderer;
     private SignaturePathManager pathManager;
+
+    private boolean autoAttachEventListener = true;
 
     private WeakReference<SignatureEventListener> eventListener = new WeakReference<SignatureEventListener>(null);
 
@@ -51,11 +55,18 @@ public class SignatureDialogFragment extends DialogFragment {
 
         this.renderer = arguments.getParcelable(KEY__SIGNATURE_RENDERER);
         this.pathManager = arguments.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
+        this.autoAttachEventListener = arguments.getBoolean(KEY__AUTO_ATTACH_EVENT_LISTENER);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
+        if (!this.autoAttachEventListener) {
+            Log.d(SignatureInputView.TAG, "Automated SignatureEventListener attaching disabled. You must manually set it.");
+
+            return;
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Fragment parent = getParentFragment();
@@ -150,24 +161,6 @@ public class SignatureDialogFragment extends DialogFragment {
     protected View buildView(Activity activity){
         return activity.getLayoutInflater()
                 .inflate(R.layout.sig__default_dialog, null, false);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putParcelable(KEY__SIGNATURE_REQUEST, request);
-        outState.putParcelable(KEY__SIGNATURE_RENDERER, renderer);
-        outState.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager);
-    }
-
-    @Override
-    public void onViewStateRestored(Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        this.request = savedInstanceState.getParcelable(KEY__SIGNATURE_REQUEST);
-        this.renderer = savedInstanceState.getParcelable(KEY__SIGNATURE_RENDERER);
-        this.pathManager = savedInstanceState.getParcelable(KEY__SIGNATURE_PATH_MANAGER);
     }
 
     public SignatureDialogFragment setSignatureEventListener(SignatureEventListener eventListener) {

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.guardanis.sigcap.*
 import com.guardanis.sigcap.SignatureInputView.*
+import com.guardanis.sigcap.dialog.SignatureDialogFragment.KEY__AUTO_ATTACH_EVENT_LISTENER
 import com.guardanis.sigcap.exceptions.NoSignatureException
 import com.guardanis.sigcap.paths.SignaturePathManager
 import java.lang.ref.WeakReference
@@ -31,6 +32,8 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
     private var renderer: SignatureRenderer? = null
     private var pathManager: SignaturePathManager? = null
 
+    private var autoAttachEventListener = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,10 +42,17 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
         this.request = arguments.getParcelable<SignatureRequest>(KEY__SIGNATURE_REQUEST) ?: this.request
         this.renderer = arguments.getParcelable(KEY__SIGNATURE_RENDERER)
         this.pathManager = arguments.getParcelable(KEY__SIGNATURE_PATH_MANAGER)
+        this.autoAttachEventListener = arguments.getBoolean(KEY__AUTO_ATTACH_EVENT_LISTENER)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        if (!this.autoAttachEventListener) {
+            Log.d(TAG, "Automated SignatureEventListener attaching disabled. You must manually set it.")
+
+            return
+        }
 
         this.eventListener = WeakReference<SignatureEventListener>(when {
             parentFragment is SignatureEventListener -> {
@@ -113,22 +123,6 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
     protected fun buildView(activity: Activity): View {
         return activity.layoutInflater
                 .inflate(com.guardanis.sigcap.R.layout.sig__default_dialog, null, false)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        outState.putParcelable(KEY__SIGNATURE_REQUEST, request)
-        outState.putParcelable(KEY__SIGNATURE_RENDERER, renderer)
-        outState.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager)
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-
-        this.request = savedInstanceState?.getParcelable(KEY__SIGNATURE_REQUEST) ?: request
-        this.renderer = savedInstanceState?.getParcelable(KEY__SIGNATURE_RENDERER)
-        this.pathManager = savedInstanceState?.getParcelable(KEY__SIGNATURE_PATH_MANAGER)
     }
 
     fun setSignatureEventListener(eventListener: SignatureEventListener?): AppCompatSignatureDialogFragment {

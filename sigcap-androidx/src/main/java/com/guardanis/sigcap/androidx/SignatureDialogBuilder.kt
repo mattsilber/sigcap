@@ -14,7 +14,7 @@ public fun SignatureDialogBuilder.showAppCompatDialogFragment(
 
     val arguments = Bundle()
     arguments.putParcelable(KEY__SIGNATURE_REQUEST, request)
-    arguments.putParcelable(KEY__SIGNATURE_RENDERER, signatureRenderer)
+    arguments.putParcelable(KEY__SIGNATURE_RENDERER, renderer)
     arguments.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager)
 
     val fragment = AppCompatSignatureDialogFragment()

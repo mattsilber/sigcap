@@ -19,6 +19,7 @@ import com.guardanis.sigcap.paths.SignaturePathManager;
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_PATH_MANAGER;
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_RENDERER;
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
+import static com.guardanis.sigcap.dialog.SignatureDialogFragment.KEY__AUTO_ATTACH_EVENT_LISTENER;
 
 /**
  * Helper class to show dialog.
@@ -33,6 +34,8 @@ public class SignatureDialogBuilder {
     private SignatureRequest request = new SignatureRequest();
     private SignaturePathManager pathManager;
     private SignatureRenderer renderer;
+
+    private boolean autoAttachEventListener;
 
     /**
      * Pass an {@link SignatureRequest} object before show the dialog.
@@ -59,13 +62,13 @@ public class SignatureDialogBuilder {
      *
      *  @author Matt Silber
      */
-    public SignatureDialogBuilder setSignatureRenderer(SignatureRenderer renderer) {
+    public SignatureDialogBuilder setRenderer(SignatureRenderer renderer) {
         this.renderer = renderer;
 
         return this;
     }
 
-    public SignatureRenderer getSignatureRenderer() {
+    public SignatureRenderer getRenderer() {
         return renderer;
     }
 
@@ -79,11 +82,25 @@ public class SignatureDialogBuilder {
         return pathManager;
     }
 
+    public boolean isAutoAttachEventListenerEnabled() {
+        return autoAttachEventListener;
+    }
+
+    public SignatureDialogBuilder setAutoAttachEventListenerEnabled(boolean autoAttachEventListener) {
+        this.autoAttachEventListener = autoAttachEventListener;
+
+        return this;
+    }
+
     public void showDialogFragment(
             FragmentManager fragmentManager,
             SignatureEventListener eventListener) {
 
         showDialogFragment(fragmentManager, SignatureDialogFragment.DEFAULT_DIALOG_TAG, eventListener);
+    }
+
+    public void showDialogFragment(FragmentManager fragmentManager) {
+        showDialogFragment(fragmentManager, SignatureDialogFragment.DEFAULT_DIALOG_TAG);
     }
 
     /**
@@ -95,6 +112,13 @@ public class SignatureDialogBuilder {
      */
     public void showDialogFragment(
             FragmentManager fragmentManager,
+            String tag) {
+
+        showDialogFragment(fragmentManager, tag, null);
+    }
+
+    public void showDialogFragment(
+            FragmentManager fragmentManager,
             String tag,
             SignatureEventListener eventListener) {
 
@@ -102,6 +126,7 @@ public class SignatureDialogBuilder {
         arguments.putParcelable(KEY__SIGNATURE_REQUEST, request);
         arguments.putParcelable(KEY__SIGNATURE_RENDERER, renderer);
         arguments.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager);
+        arguments.putBoolean(KEY__AUTO_ATTACH_EVENT_LISTENER, autoAttachEventListener);
 
         SignatureDialogFragment fragment = new SignatureDialogFragment();
         fragment.setArguments(arguments);
