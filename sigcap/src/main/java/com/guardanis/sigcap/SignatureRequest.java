@@ -6,10 +6,17 @@ import android.os.Parcelable;
 
 public class SignatureRequest implements Parcelable {
 
+    public enum ResultCropStrategy {
+        CANVAS_BOUNDS,
+        SIGNATURE_BOUNDS
+    }
+
     private int resultBackgroundColor = Color.WHITE;
 
     private boolean resultIncludeBaseline = true;
     private boolean resultIncludeBaselineXMark = true;
+
+    private ResultCropStrategy resultCropStrategy = ResultCropStrategy.CANVAS_BOUNDS;
 
     public SignatureRequest() { }
 
@@ -17,20 +24,8 @@ public class SignatureRequest implements Parcelable {
         this.resultBackgroundColor = in.readInt();
         this.resultIncludeBaseline = in.readBoolean();
         this.resultIncludeBaselineXMark = in.readBoolean();
+        this.resultCropStrategy = ResultCropStrategy.valueOf(in.readString());
     }
-
-    public static final Creator<SignatureRequest> CREATOR = new Creator<SignatureRequest>() {
-
-        @Override
-        public SignatureRequest createFromParcel(Parcel in) {
-            return new SignatureRequest(in);
-        }
-
-        @Override
-        public SignatureRequest[] newArray(int size) {
-            return new SignatureRequest[size];
-        }
-    };
 
     public int getResultBackgroundColor() {
         return resultBackgroundColor;
@@ -46,6 +41,10 @@ public class SignatureRequest implements Parcelable {
         return resultIncludeBaseline;
     }
 
+    /**
+     * @param resultIncludeBaseline to show or not show te visible baseline.
+     *      Value is ignored when ResultCropStrategy.SIGNATURE_BOUNDS is being used.
+     */
     public SignatureRequest setResultIncludeBaseline(boolean resultIncludeBaseline) {
         this.resultIncludeBaseline = resultIncludeBaseline;
 
@@ -56,8 +55,22 @@ public class SignatureRequest implements Parcelable {
         return resultIncludeBaselineXMark;
     }
 
+    /**
+     * @param resultIncludeBaselineXMark to show or not show te baseline x-Mark.
+     *      Value is ignored when ResultCropStrategy.SIGNATURE_BOUNDS is being used.
+     */
     public SignatureRequest setResultIncludeBaselineXMark(boolean resultIncludeBaselineXMark) {
         this.resultIncludeBaselineXMark = resultIncludeBaselineXMark;
+
+        return this;
+    }
+
+    public ResultCropStrategy getResultCropStrategy() {
+        return resultCropStrategy;
+    }
+
+    public SignatureRequest setResultCropStrategy(ResultCropStrategy resultCropStrategy) {
+        this.resultCropStrategy = resultCropStrategy;
 
         return this;
     }
@@ -72,5 +85,19 @@ public class SignatureRequest implements Parcelable {
         dest.writeInt(resultBackgroundColor);
         dest.writeBoolean(resultIncludeBaseline);
         dest.writeBoolean(resultIncludeBaselineXMark);
+        dest.writeString(resultCropStrategy.name());
     }
+
+    public static final Creator<SignatureRequest> CREATOR = new Creator<SignatureRequest>() {
+
+        @Override
+        public SignatureRequest createFromParcel(Parcel in) {
+            return new SignatureRequest(in);
+        }
+
+        @Override
+        public SignatureRequest[] newArray(int size) {
+            return new SignatureRequest[size];
+        }
+    };
 }

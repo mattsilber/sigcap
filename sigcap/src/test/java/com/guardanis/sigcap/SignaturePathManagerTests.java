@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import static com.guardanis.sigcap.SignaturePathTests.joinToString;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -78,6 +79,18 @@ public class SignaturePathManagerTests {
         manager.notifyTouchUp(motionEvent);
 
         assertEquals(1, manager.getPaths().size());
+    }
+
+    @Test
+    public void testSignaturePathManagerCalculatedMinMaxBounds() {
+        SignaturePathManager manager = new SignaturePathManager()
+                .addPath(new SignaturePath(new float[] { 0f, 0f, 10f, 100f, -25f, -5f }))
+                .addPath(new SignaturePath(new float[] { 10f, -10f, -10f, -10f }))
+                .addPath(new SignaturePath(new float[] { 100f, -100f, 10f, 100f  }));
+
+        assertEquals(
+                "-25.0,-100.0,100.0,100.0",
+                joinToString(manager.getMinMaxBounds()));
     }
 
     private MotionEvent generateMotionEvent(float x, float y, int action) {

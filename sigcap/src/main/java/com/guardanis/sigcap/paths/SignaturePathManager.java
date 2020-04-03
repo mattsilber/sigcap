@@ -4,6 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.MotionEvent;
 
+import com.guardanis.sigcap.exceptions.BadSignaturePathException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +91,44 @@ public class SignaturePathManager implements Parcelable {
         }
 
         return this;
+    }
+
+    public float[] getMinMaxBounds() {
+        synchronized (paths) {
+            if (paths.isEmpty())
+                throw new BadSignaturePathException("Can't getMinMaxBounds without a history!");
+
+            float[] firstPathBounds = paths.get(0)
+                    .getMinMaxBounds();
+
+            float minX = firstPathBounds[0];
+            float minY = firstPathBounds[1];
+            float maxX = firstPathBounds[2];
+            float maxY = firstPathBounds[3];
+
+            for (int index = 1; index < paths.size(); index++) {
+                float[] bounds = paths.get(index)
+                        .getMinMaxBounds();
+
+                if (bounds[0] < minX) {
+                    minX = bounds[0];
+                }
+
+                if (bounds[1] < minY) {
+                    minY = bounds[1];
+                }
+
+                if (maxX < bounds[2]) {
+                    maxX = bounds[2];
+                }
+
+                if (maxY < bounds[3]) {
+                    maxY = bounds[3];
+                }
+            }
+
+            return new float[] { minX, minY, maxX, maxY };
+        }
     }
 
     @Override

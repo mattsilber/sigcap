@@ -41,7 +41,8 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
                         SignatureRequest()
                                 .setResultBackgroundColor(Color.TRANSPARENT)
                                 .setResultIncludeBaseline(true)
-                                .setResultIncludeBaselineXMark(true))
+                                .setResultIncludeBaselineXMark(true)
+                                .setResultCropStrategy(SignatureRequest.ResultCropStrategy.CANVAS_BOUNDS))
                 // Optionally set a SignatureRenderer to manually configure the
                 // rendering instance, or supply your own.
                 .setRenderer(
@@ -69,6 +70,12 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
 
     fun startAppCompatClicked(view: View?) {
         SignatureDialogBuilder()
+                // Optionally set a SignatureRequest to configure the
+                // result rendering options
+                .setRequest(
+                        SignatureRequest()
+                                .setResultBackgroundColor(Color.TRANSPARENT)
+                                .setResultCropStrategy(SignatureRequest.ResultCropStrategy.SIGNATURE_BOUNDS))
                 .showAppCompatDialogFragment(supportFragmentManager, eventListener = this)
     }
 

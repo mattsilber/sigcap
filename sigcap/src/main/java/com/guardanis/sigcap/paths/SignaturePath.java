@@ -73,6 +73,40 @@ public class SignaturePath implements Parcelable {
         return coordinateHistory.size();
     }
 
+    // @return [left, right, top, bottom] relative to the View
+    //          the points were originally created from
+    public float[] getMinMaxBounds() {
+        synchronized (path) {
+            if (coordinateHistory.isEmpty())
+                throw new BadSignaturePathException("Can't getMinMaxBounds without a history!");
+
+            float minX = coordinateHistory.get(0)[0];
+            float minY = coordinateHistory.get(0)[1];
+            float maxX = coordinateHistory.get(0)[0];
+            float maxY = coordinateHistory.get(0)[1];
+
+            for (int index = 1; index < coordinateHistory.size(); index++) {
+                Float[] coordinate = coordinateHistory.get(index);
+
+                if (coordinate[0] < minX) {
+                    minX = coordinate[0];
+                }
+                else if (maxX < coordinate[0]) {
+                    maxX = coordinate[0];
+                }
+
+                if (coordinate[1] < minY) {
+                    minY = coordinate[1];
+                }
+                else if (maxY < coordinate[1]) {
+                    maxY = coordinate[1];
+                }
+            }
+
+            return new float[] { minX, minY, maxX, maxY };
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;

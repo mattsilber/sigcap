@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Pair;
 
 import com.guardanis.sigcap.paths.SignaturePath;
 import com.guardanis.sigcap.paths.SignaturePathManager;
@@ -116,22 +117,57 @@ public class SignatureRenderer implements Parcelable {
             SignaturePathManager manager,
             int[] renderBounds) {
 
-        Bitmap bitmap = Bitmap.createBitmap(renderBounds[0], renderBounds[1], Bitmap.Config.ARGB_8888);
+        Pair<Bitmap, Canvas> result = generateResultBitmapAndCanvas(request, manager, renderBounds);
 
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(request.getResultBackgroundColor());
+        result.second.drawColor(request.getResultBackgroundColor());
 
-        if (request.shouldResultIncludeBaseline()) {
-            drawBaseline(canvas);
+        switch (request.getResultCropStrategy()) {
+            case SIGNATURE_BOUNDS:
+                break;
+            case CANVAS_BOUNDS:
+                if (request.shouldResultIncludeBaseline()) {
+                    drawBaseline(result.second);
+                }
+
+                if (request.shouldResultIncludeBaselineXMark()) {
+                    drawBaselineXMark(result.second);
+                }
+
+                break;
         }
 
-        if (request.shouldResultIncludeBaselineXMark()) {
-            drawBaselineXMark(canvas);
+        drawPathManager(result.second, manager);
+
+        return result.first;
+    }
+
+    private Pair<Bitmap, Canvas> generateResultBitmapAndCanvas(
+            SignatureRequest request,
+            SignaturePathManager manager,
+            int[] renderBounds) {
+
+        switch (request.getResultCropStrategy()) {
+            case SIGNATURE_BOUNDS:
+                float[] signatureMinMaxBounds = manager.getMinMaxBounds();
+
+                Bitmap signatureSizedBitmap = Bitmap.createBitmap(
+                        (int) (signatureMinMaxBounds[2] - signatureMinMaxBounds[0]),
+                        (int) (signatureMinMaxBounds[3] - signatureMinMaxBounds[1]),
+                        Bitmap.Config.ARGB_8888);
+
+                Canvas canvas = new Canvas(signatureSizedBitmap);
+                canvas.translate(-signatureMinMaxBounds[0], -signatureMinMaxBounds[1]);
+
+                return new Pair<Bitmap, Canvas>(signatureSizedBitmap, canvas);
+            case CANVAS_BOUNDS:
+            default:
+                Bitmap bitmap = Bitmap.createBitmap(
+                        renderBounds[0],
+                        renderBounds[1],
+                        Bitmap.Config.ARGB_8888);
+
+                return new Pair<Bitmap, Canvas>(bitmap, new Canvas(bitmap));
         }
-
-        drawPathManager(canvas, manager);
-
-        return bitmap;
     }
 
     public SignatureRenderer setSignaturePaintColor(int signaturePaintColor) {

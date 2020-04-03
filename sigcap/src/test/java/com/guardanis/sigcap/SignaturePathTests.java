@@ -34,6 +34,25 @@ public class SignaturePathTests {
         assertEquals(joinToString(serialized), deserializedReserializedNormalized);
     }
 
+    @Test
+    public void testSignaturePathMinMaxBounds() {
+        assertEquals(
+                "0.0,0.0,10.0,10.0",
+                joinToString(
+                        new SignaturePath(new float[] { 0f, 0f, 10f, 10f })
+                                .getMinMaxBounds()));
+        assertEquals(
+                "-10.0,-10.0,100.0,100.0",
+                joinToString(
+                        new SignaturePath(new float[] { -10f, -10f, 10f, 10f , 100f, 100f, -5f, -5f })
+                                .getMinMaxBounds()));
+        assertEquals(
+                "10.0,-100.0,100.0,100.0",
+                joinToString(
+                        new SignaturePath(new float[] { 100f, -100f, 10f, 100f })
+                                .getMinMaxBounds()));
+    }
+
     @Test(expected = BadSignaturePathException.class)
     public void testSignaturePathThrowsWhenDeserializationFails() {
         new SignaturePath(new float[] { 0f, 0f, 0f });
@@ -58,7 +77,7 @@ public class SignaturePathTests {
         fail("BadSignaturePathException should have been thrown");
     }
 
-    private String joinToString(float[] data) {
+    public static String joinToString(float[] data) {
         StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < data.length; i++) {
