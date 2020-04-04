@@ -36,7 +36,7 @@ This helper class is all you need to integrate `sigcap`, with text and colors ea
 If all you want to do is show a Dialog and you don't care about orientation changes or state, just create a `SignatureEventListener` and pass it to your `SignatureDialogBuilder` instance:
 
 ```java
-SignatureEventListener eventListsner = new SignatureEventListener() {
+SignatureEventListener eventListener = new SignatureEventListener() {
     
     @Override
     public void onSignatureEntered(SignatureResponse response) {
@@ -66,7 +66,7 @@ SignatureEventListener eventListsner = new SignatureEventListener() {
 };
 
 new SignatureDialogBuilder()
-    .showStatelessAlertDialog(this, eventListsner);
+    .showStatelessAlertDialog(this, eventListener);
 ```
 
 Or you can create a `SignatureDialogFragment`:
@@ -76,7 +76,7 @@ String tag = "fragment_tag";
 
 // Display the `SignatureDialogFragment`
 new SignatureDialogBuilder()
-    .showDialogFragment(this, tag, eventListsner);
+    .showDialogFragment(this, tag, eventListener);
 
 // Find the `SignatureDialogFragment` and set the `SignatureEventListener`
 // If your `Activity` or calling `Fragment` does not implement `SignatureEventListener`, you
@@ -85,7 +85,7 @@ SignatureDialogFragment fragment = (SignatureDialogFragment) getFragmentManager(
     .findFragmentByTag(tag);
 
 if (fragment != null) {
-    fragment.setSignatureEventListener(eventListsner);
+    fragment.setSignatureEventListener(eventListener);
 }
 ```
 
@@ -100,6 +100,10 @@ SignatureDialogBuilder()
 // If your `Activity` or calling `Fragment` does not implement `SignatureEventListener`, you
 // will need to manually reset the `SignatureEventListener` when restoring.
 supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
-    ?.setSignatureEventListener(eventListsner)
+    ?.setSignatureEventListener(eventListener)
 
 ```
+
+### Migrating Version 1x to Version 2x
+
+Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v1-v2.md).
