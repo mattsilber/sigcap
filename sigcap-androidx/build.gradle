@@ -50,3 +50,8 @@ ext {
 }
 
 apply from: project.rootProject.file('deployments.gradle')
+
+// Disable javadoc for the kotlin files
+tasks.withType(Javadoc).all {
+    failOnError = false
+}

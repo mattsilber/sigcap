@@ -1,5 +1,7 @@
 # sigcap
 
+[![Download](https://api.bintray.com/packages/mattsilber/maven/sigcap/images/download.svg) ](https://bintray.com/mattsilber/maven/sigcap/_latestVersion)
+
 This library is intended to help capture signatures with an easily-configurable style.
 
 ![sigcap Sample](https://github.com/mattsilber/sigcap/raw/master/sigcap.gif)

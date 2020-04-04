@@ -12,14 +12,14 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import com.guardanis.sigcap.*
 import com.guardanis.sigcap.SignatureInputView.*
 import com.guardanis.sigcap.dialog.SignatureDialogFragment.KEY__AUTO_ATTACH_EVENT_LISTENER
+import com.guardanis.sigcap.dialog.UndoLastSignatureClickListener
 import com.guardanis.sigcap.exceptions.NoSignatureException
 import com.guardanis.sigcap.paths.SignaturePathManager
 import java.lang.ref.WeakReference
 
 /**
- * Dialog that prevent dismiss if device is rotated.
- * To use it, the activity or parent fragment must implement [SignatureEventListener] interface,
- * otherwise it will throw an [RuntimeException]
+ * An [AppCompatDialogFragment] designed to manage a configurable [SignatureInputView]
+ * in a state-restoring way.
  *
  * @author Yordan P. Dieguez
  * @author Matt Silber
@@ -54,24 +54,14 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
             return
         }
 
-        this.eventListener = WeakReference<SignatureEventListener>(when {
-            parentFragment is SignatureEventListener -> {
-                parentFragment as SignatureEventListener
-            }
-            context is SignatureEventListener -> {
-                context
-            }
-            else -> {
-                val errorParentName = when (val parent = parentFragment) {
-                    null -> ""
-                    else -> " or $parent"
-                }
+        this.eventListener = WeakReference<SignatureEventListener>(
+                (parentFragment as? SignatureEventListener)
+                        ?: (context as? SignatureEventListener)
+                        ?: {
+                            logOnAttachEventListenerFailed()
 
-                Log.d(TAG, "SignatureDialogFragment's $activity $errorParentName are not a SignatureEventListener. You must manually set it.")
-
-                null
-            }
-        })
+                            null
+                        }())
     }
 
     @SuppressLint("InflateParams")
@@ -113,7 +103,8 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
                 .create()
 
         view.findViewById<View>(R.id.sig__action_undo)
-                .setOnClickListener({ inputView.undoLastSignaturePath() })
+                .setOnClickListener(
+                        UndoLastSignatureClickListener(inputView))
 
         dialog.setCanceledOnTouchOutside(false)
 
@@ -125,9 +116,29 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment() {
                 .inflate(com.guardanis.sigcap.R.layout.sig__default_dialog, null, false)
     }
 
+    /**
+     * Set the [SignatureEventListener] to be used when interacting with the
+     * created [Dialog].
+     *
+     * Note: you will need to maintain a strong reference to your [SignatureEventListener]
+     * as the [AppCompatSignatureDialogFragment] stores the instance in a [WeakReference].
+     */
     fun setSignatureEventListener(eventListener: SignatureEventListener?): AppCompatSignatureDialogFragment {
         this.eventListener = WeakReference<SignatureEventListener>(eventListener)
 
         return this
+    }
+
+    private fun logOnAttachEventListenerFailed() {
+        val errorParentName = when (val parent = parentFragment) {
+            null -> ""
+            else -> " or $parent"
+        }
+
+        Log.d(TAG, """
+            SignatureDialogFragment's $activity $errorParentName are 
+            not a SignatureEventListener instance. You must manually set 
+            one via setSignatureEventListener.
+        """.trimIndent())
     }
 }

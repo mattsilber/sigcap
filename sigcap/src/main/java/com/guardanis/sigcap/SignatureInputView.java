@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -70,6 +69,9 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         finally { a.recycle(); }
     }
 
+    /**
+     * @return a {@link SignatureRenderer} styled with the supplied {@link TypedArray}
+     */
     protected SignatureRenderer generateSignatureRenderer(TypedArray attributes) {
         int signatureColor = attributes.getColor(
                 R.styleable.SignatureInputView_signatureColor,
@@ -113,6 +115,10 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         return true;
     }
 
+    /**
+     * Undo the last complete {@link SignaturePath} from the
+     * {@link SignaturePathManager} and invalidate.
+     */
     public void undoLastSignaturePath() {
         pathManager.undoLastPath();
 
@@ -158,14 +164,26 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         super.onRestoreInstanceState(signatureState.getSuperState());
     }
 
+    /**
+     * Generate and return a {@link Bitmap} from the {@link SignaturePathManager}
+     * data using the supplied {@link SignatureRequest} and {@link SignatureRenderer}
+     */
     public Bitmap renderToBitmap() {
         return renderer.renderToBitmap(request, pathManager, lastRenderBounds);
     }
 
+    /**
+     * Generate and return a new {@link SignatureResponse} containing a {@link Bitmap} created from
+     * the {@link SignaturePathManager} data using the supplied {@link SignatureRequest}
+     * and {@link SignatureRenderer}
+     */
     public SignatureResponse saveSignature() {
         return new SignatureResponse(renderToBitmap());
     }
 
+    /**
+     * @return true if at least one complete {@link SignaturePath} exists
+     */
     public boolean isSignatureInputAvailable() {
         return pathManager.isSignatureInputAvailable();
     }
@@ -197,7 +215,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     /**
-     * Get signature paths.
+     * Get the {@link SignaturePath} instances from the {@link SignaturePathManager}
      * @author Yordan P. Dieguez
      */
     public List<SignaturePath> getSignaturePaths() {

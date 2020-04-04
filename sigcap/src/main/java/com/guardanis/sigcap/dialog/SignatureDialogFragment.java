@@ -27,6 +27,10 @@ import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_PATH_MANAGE
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_RENDERER;
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
 
+/**
+ * A {@link DialogFragment} designed to manage a configurable {@link SignatureInputView}
+ * in a state-restoring way.
+ */
 public class SignatureDialogFragment extends DialogFragment {
 
     public static final String DEFAULT_DIALOG_TAG = "signcap__default_dialog";
@@ -149,11 +153,8 @@ public class SignatureDialogFragment extends DialogFragment {
                 .create();
 
         view.findViewById(R.id.sig__action_undo)
-                .setOnClickListener(new View.OnClickListener() {
-                    public void onClick(View view) {
-                        inputView.undoLastSignaturePath();
-                    }
-                });
+                .setOnClickListener(
+                        new UndoLastSignatureClickListener(inputView));
 
         return dialog;
     }
@@ -163,6 +164,13 @@ public class SignatureDialogFragment extends DialogFragment {
                 .inflate(R.layout.sig__default_dialog, null, false);
     }
 
+    /**
+     * Set the {@link SignatureEventListener} to be used when interacting with the
+     * created {@link Dialog}.
+     *
+     * Note: you will need to maintain a strong reference to your {@link SignatureEventListener}
+     * as the {@link SignatureDialogFragment} stores the instance in a {@link WeakReference}.
+     */
     public SignatureDialogFragment setSignatureEventListener(SignatureEventListener eventListener) {
         this.eventListener = new WeakReference<SignatureEventListener>(eventListener);
 
