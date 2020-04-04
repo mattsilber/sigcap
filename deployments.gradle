@@ -1,0 +1,7 @@
+Properties localProperties = new Properties()
+localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+if (localProperties.getProperty("bintray.release_mode", "false") == "true") {
+    apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/installv1.gradle'
+    apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/bintrayv1.gradle'
+}

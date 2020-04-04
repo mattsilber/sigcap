@@ -49,12 +49,4 @@ ext {
     libraryVersion = '2.0.0'
 }
 
-Properties localProperties = new Properties()
-localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-if (properties.hasProperty("bintray.release_mode")
-        && properties.getProperty("bintray.release_mode") == "true") {
-
-    apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/installv1.gradle'
-    apply from: 'https://raw.githubusercontent.com/attwellBrian/JCenter/master/bintrayv1.gradle'
-}
+apply from: project.rootProject.file('deployments.gradle')
