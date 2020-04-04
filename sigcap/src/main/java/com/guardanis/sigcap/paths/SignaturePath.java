@@ -17,23 +17,25 @@ public class SignaturePath implements Parcelable {
 
     public SignaturePath() { }
 
+    public SignaturePath(SignaturePath original) {
+        this(original.serializeCoordinateHistory());
+    }
+
     protected SignaturePath(Parcel in) {
         this(in.createFloatArray());
     }
 
     public SignaturePath(float[] flattenedCoordinates) {
+        if (flattenedCoordinates.length % 2 != 0)
+            throw new BadSignaturePathException("SignaturePath flattened coordinate history must be an even number of digits");
+
         if (flattenedCoordinates.length < 2)
             return;
 
-        try {
-            movePathTo(new Float[] { flattenedCoordinates[0], flattenedCoordinates[1] });
+        movePathTo(new Float[] { flattenedCoordinates[0], flattenedCoordinates[1] });
 
-            for (int i = 2; i < flattenedCoordinates.length; i += 2) {
-                addPathLineTo(new Float[] { flattenedCoordinates[i], flattenedCoordinates[i + 1] });
-            }
-        }
-        catch (Exception e) {
-            throw new BadSignaturePathException(e);
+        for (int i = 2; i < flattenedCoordinates.length; i += 2) {
+            addPathLineTo(new Float[] { flattenedCoordinates[i], flattenedCoordinates[i + 1] });
         }
     }
 
@@ -70,11 +72,22 @@ public class SignaturePath implements Parcelable {
     }
 
     public int getCoordinateHistorySize() {
-        return coordinateHistory.size();
+        synchronized (path) {
+            return coordinateHistory.size();
+        }
     }
 
-    // @return [left, right, top, bottom] relative to the View
-    //          the points were originally created from
+    /**
+     * Return the minimum and maximum boundaries of this {@link SignaturePath}
+     * relative to the View the coordinate history was originally
+     * generated from
+     *
+     * @return [left, right, top, bottom] relative to the View
+     *      the points were originally created from
+     *
+     * @throws BadSignaturePathException exception when the
+     *      coordinate history is empty
+     */
     public float[] getMinMaxBounds() {
         synchronized (path) {
             if (coordinateHistory.isEmpty())
@@ -117,6 +130,12 @@ public class SignaturePath implements Parcelable {
         dest.writeFloatArray(serializeCoordinateHistory());
     }
 
+    /**
+     * Flattens the coordinate history into a float array, in the order
+     * in which they were added to the collection.
+     *
+     * @return the flattened coordinate history in the form of [x1, y1, x2, y2, ...]
+     */
     public float[] serializeCoordinateHistory() {
         synchronized (path) {
             int coordinateHistorySize = coordinateHistory.size();

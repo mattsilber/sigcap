@@ -35,6 +35,20 @@ public class SignaturePathTests {
     }
 
     @Test
+    public void testSignaturePathCloning() {
+        TestSignaturePath pathOriginal = new TestSignaturePath();
+        pathOriginal.movePathTo(new Float[] { 0f, 0f });
+        pathOriginal.addPathLineTo(new Float[] { 1f, 2f });
+        pathOriginal.addPathLineTo(new Float[] { 3f, 4f });
+
+        SignaturePath cloned = new SignaturePath(pathOriginal);
+
+        assertEquals(
+                joinToString(pathOriginal.serializeCoordinateHistory()),
+                joinToString(cloned.serializeCoordinateHistory()));
+    }
+
+    @Test
     public void testSignaturePathMinMaxBounds() {
         assertEquals(
                 "0.0,0.0,10.0,10.0",
@@ -58,6 +72,15 @@ public class SignaturePathTests {
         new SignaturePath(new float[] { 0f, 0f, 0f });
 
         fail("BadSignaturePathException should have been thrown");
+    }
+
+    @Test
+    public void testSignaturePathDeserializesPathWithSingleMoveEvent() {
+        String result = joinToString(
+                new SignaturePath(new float[] { 1f, 1f })
+                        .serializeCoordinateHistory());
+
+        assertEquals("1.0,1.0", result);
     }
 
     @Test(expected = BadSignaturePathException.class)

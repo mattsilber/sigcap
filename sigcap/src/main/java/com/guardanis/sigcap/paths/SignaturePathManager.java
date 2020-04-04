@@ -57,6 +57,10 @@ public class SignaturePathManager implements Parcelable {
         }
     }
 
+    /**
+     * Append the supplied {@link SignaturePath} instance to
+     * the end of the path history.
+     */
     public SignaturePathManager addPath(SignaturePath path) {
         synchronized (paths) {
             this.paths.add(path);
@@ -65,6 +69,10 @@ public class SignaturePathManager implements Parcelable {
         return this;
     }
 
+    /**
+     * Append all of the supplied {@link SignaturePath} instances to
+     * the end of the path history.
+     */
     public SignaturePathManager addAllPaths(List<SignaturePath> paths) {
         synchronized (paths) {
             this.paths.addAll(paths);
@@ -73,18 +81,67 @@ public class SignaturePathManager implements Parcelable {
         return this;
     }
 
+    /**
+     * @return a clone of the collection of {@link SignaturePath} instances
+     *      that this {@link SignaturePathManager} has collected through
+     *      various inputs
+     */
+    public List<SignaturePath> getClonedPaths() {
+        synchronized (paths) {
+            ArrayList<SignaturePath> cloned = new ArrayList<SignaturePath>();
+
+            for (SignaturePath original : this.paths)
+                cloned.add(new SignaturePath(original));
+
+            return cloned;
+        }
+    }
+
+    /**
+     * @return the actual collection of {@link SignaturePath} instances
+     *      that this {@link SignaturePathManager} has collected through
+     *      various inputs
+     */
     public List<SignaturePath> getPaths() {
-        return paths;
+        synchronized (paths) {
+            return this.paths;
+        }
     }
 
+    /**
+     * @return a clone of the {@link SignaturePath} instance
+     *      that this {@link SignaturePathManager} is actively passing
+     *      various inputs to
+     */
+    public SignaturePath getClonedActivePath() {
+        synchronized (paths) {
+            return new SignaturePath(activePath);
+        }
+    }
+
+    /**
+     * @return the actual {@link SignaturePath} instance
+     *      that this {@link SignaturePathManager} is actively passing
+     *      various inputs to
+     */
     public SignaturePath getActivePath() {
-        return activePath;
+        synchronized (paths) {
+            return this.activePath;
+        }
     }
 
+    /**
+     * @return true if at least one complete {@link SignaturePath} exists
+     */
     public boolean isSignatureInputAvailable() {
-        return 0 < paths.size();
+        synchronized (paths) {
+            return 0 < paths.size();
+        }
     }
 
+    /**
+     * Remove all {@link SignaturePath} instances
+     */
     public SignaturePathManager clearSignaturePaths() {
         synchronized (paths) {
             this.paths.clear();
@@ -93,6 +150,16 @@ public class SignaturePathManager implements Parcelable {
         return this;
     }
 
+    /**
+     * Return the minimum and maximum boundaries of all {@link SignaturePath}
+     * instances collected by this {@link SignaturePathManager}
+     *
+     * @return [left, right, top, bottom] relative to the View
+     *      the points were originally created from
+     *
+     * @throws BadSignaturePathException exception when no complete
+     *      {@link SignaturePath} instances have been collected
+     */
     public float[] getMinMaxBounds() {
         synchronized (paths) {
             if (paths.isEmpty())

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SignatureInputView extends View implements View.OnTouchListener {
 
-    public static final String TAG = "signcap";
+    public static final String TAG = "sigcap";
 
     public static final String KEY__SIGNATURE_REQUEST = "sdf__request";
     public static final String KEY__SIGNATURE_RENDERER = "sdf__renderer";
@@ -215,11 +215,13 @@ public class SignatureInputView extends View implements View.OnTouchListener {
     }
 
     /**
-     * Get the {@link SignaturePath} instances from the {@link SignaturePathManager}
+     * Get a cloned List containing the {@link SignaturePath} instances currently
+     * collected by the {@link SignaturePathManager}
+     *
      * @author Yordan P. Dieguez
      */
-    public List<SignaturePath> getSignaturePaths() {
-        return pathManager.getPaths();
+    public List<SignaturePath> getClonedSignaturePaths() {
+        return pathManager.getClonedPaths();
     }
 
     protected static class SignatureState extends BaseSavedState {

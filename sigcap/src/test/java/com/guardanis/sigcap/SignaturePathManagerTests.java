@@ -60,12 +60,18 @@ public class SignaturePathManagerTests {
         assertEquals(0, manager.getPaths().size());
         assertEquals(1, manager.getActivePath().getCoordinateHistorySize());
 
+        assertEquals(0, manager.getClonedPaths().size());
+        assertEquals(1, manager.getClonedActivePath().getCoordinateHistorySize());
+
         manager.notifyTouchMove(motionEvent);
         manager.notifyTouchMove(motionEvent);
         manager.notifyTouchMove(motionEvent);
 
         assertEquals(0, manager.getPaths().size());
         assertEquals(4, manager.getActivePath().getCoordinateHistorySize());
+
+        assertEquals(0, manager.getClonedPaths().size());
+        assertEquals(4, manager.getClonedActivePath().getCoordinateHistorySize());
     }
 
     @Test
