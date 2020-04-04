@@ -8,13 +8,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 
-import com.guardanis.sigcap.exceptions.NoSignatureException;
 import com.guardanis.sigcap.R;
 import com.guardanis.sigcap.SignatureEventListener;
 import com.guardanis.sigcap.SignatureInputView;
 import com.guardanis.sigcap.SignatureRenderer;
 import com.guardanis.sigcap.SignatureRequest;
 import com.guardanis.sigcap.SignatureResponse;
+import com.guardanis.sigcap.dialog.events.UndoLastSignatureClickListener;
+import com.guardanis.sigcap.exceptions.NoSignatureException;
 import com.guardanis.sigcap.paths.SignaturePathManager;
 
 import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_PATH_MANAGER;

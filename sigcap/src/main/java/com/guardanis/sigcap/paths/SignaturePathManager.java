@@ -29,7 +29,7 @@ public class SignaturePathManager implements Parcelable {
                 paths.add(activePath);
             }
 
-            this.activePath = new SignaturePath();
+            this.activePath = createSignaturePathInstance();
             this.activePath.movePathTo(event);
         }
     }
@@ -44,8 +44,12 @@ public class SignaturePathManager implements Parcelable {
         synchronized (paths) {
             paths.add(activePath);
 
-            this.activePath = new SignaturePath();
+            this.activePath = createSignaturePathInstance();
         }
+    }
+
+    protected SignaturePath createSignaturePathInstance() {
+        return new SignaturePath();
     }
 
     public void undoLastPath() {

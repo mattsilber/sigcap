@@ -12,8 +12,8 @@ import java.util.List;
 
 public class SignaturePath implements Parcelable {
 
-    private Path path = new Path();
-    private List<Float[]> coordinateHistory = new ArrayList<Float[]>();
+    private final Path path = new Path();
+    private final List<Float[]> coordinateHistory = new ArrayList<Float[]>();
 
     public SignaturePath() { }
 

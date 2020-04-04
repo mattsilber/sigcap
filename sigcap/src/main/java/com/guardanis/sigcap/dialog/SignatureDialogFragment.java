@@ -6,19 +6,20 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.os.Build;
 
-import com.guardanis.sigcap.exceptions.NoSignatureException;
 import com.guardanis.sigcap.R;
 import com.guardanis.sigcap.SignatureEventListener;
 import com.guardanis.sigcap.SignatureInputView;
 import com.guardanis.sigcap.SignatureRenderer;
 import com.guardanis.sigcap.SignatureRequest;
-import com.guardanis.sigcap.SignatureResponse;
+import com.guardanis.sigcap.dialog.events.DeferredSignatureEventDialogClickListener;
+import com.guardanis.sigcap.dialog.events.SignatureCanceledDialogClickListener;
+import com.guardanis.sigcap.dialog.events.SignatureSubmissionDialogClickListener;
+import com.guardanis.sigcap.dialog.events.UndoLastSignatureClickListener;
 import com.guardanis.sigcap.paths.SignaturePathManager;
 
 import java.lang.ref.WeakReference;
@@ -31,7 +32,8 @@ import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
  * A {@link DialogFragment} designed to manage a configurable {@link SignatureInputView}
  * in a state-restoring way.
  */
-public class SignatureDialogFragment extends DialogFragment {
+public class SignatureDialogFragment extends DialogFragment
+        implements DeferredSignatureEventDialogClickListener.EventListenerDelegate {
 
     public static final String DEFAULT_DIALOG_TAG = "signcap__default_dialog";
 
@@ -44,6 +46,9 @@ public class SignatureDialogFragment extends DialogFragment {
     private boolean autoAttachEventListener = true;
 
     private WeakReference<SignatureEventListener> eventListener = new WeakReference<SignatureEventListener>(null);
+
+    private SignatureSubmissionDialogClickListener submissionActionClickListener = new SignatureSubmissionDialogClickListener();
+    private SignatureCanceledDialogClickListener canceledActionClickListener = new SignatureCanceledDialogClickListener();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,45 +116,16 @@ public class SignatureDialogFragment extends DialogFragment {
             inputView.setPathManager(pathManager);
         }
 
+        submissionActionClickListener.setEventListenerDelegate(this);
+        submissionActionClickListener.setInputView(inputView);
+
+        canceledActionClickListener.setEventListenerDelegate(this);
+
         Dialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.sig__default_dialog_title)
                 .setView(view)
-                .setPositiveButton(R.string.sig__default_dialog_action_confirm, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        try{
-                            if(!inputView.isSignatureInputAvailable())
-                                throw new NoSignatureException("No signature found");
-
-                            SignatureResponse saved = inputView.saveSignature();
-                            SignatureEventListener listener = eventListener.get();
-
-                            if (listener == null)
-                                return;
-
-                            listener.onSignatureEntered(saved);
-                        }
-                        catch(Exception e){
-                            e.printStackTrace();
-
-                            SignatureEventListener listener = eventListener.get();
-
-                            if (listener == null)
-                                return;
-
-                            listener.onSignatureInputError(e);
-                        }
-                    }
-                })
-                .setNegativeButton(R.string.sig__default_dialog_action_cancel, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        SignatureEventListener listener = eventListener.get();
-
-                        if (listener == null)
-                            return;
-
-                        listener.onSignatureInputCanceled();
-                    }
-                })
+                .setPositiveButton(R.string.sig__default_dialog_action_confirm, submissionActionClickListener)
+                .setNegativeButton(R.string.sig__default_dialog_action_cancel, canceledActionClickListener)
                 .create();
 
         view.findViewById(R.id.sig__action_undo)
@@ -175,5 +151,10 @@ public class SignatureDialogFragment extends DialogFragment {
         this.eventListener = new WeakReference<SignatureEventListener>(eventListener);
 
         return this;
+    }
+
+    @Override
+    public SignatureEventListener getEventListener() {
+        return eventListener.get();
     }
 }

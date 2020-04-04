@@ -2,10 +2,10 @@ package com.guardanis.sigcap.androidx
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
-import com.guardanis.sigcap.dialog.SignatureDialogBuilder
-import com.guardanis.sigcap.dialog.SignatureDialogFragment.DEFAULT_DIALOG_TAG
 import com.guardanis.sigcap.SignatureEventListener
 import com.guardanis.sigcap.SignatureInputView.*
+import com.guardanis.sigcap.dialog.SignatureDialogBuilder
+import com.guardanis.sigcap.dialog.SignatureDialogFragment.DEFAULT_DIALOG_TAG
 
 /**
  * Create an [AppCompatSignatureDialogFragment] and show it.

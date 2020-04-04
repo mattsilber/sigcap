@@ -1,4 +1,4 @@
-package com.guardanis.sigcap.dialog;
+package com.guardanis.sigcap.dialog.events;
 
 import android.view.View;
 
