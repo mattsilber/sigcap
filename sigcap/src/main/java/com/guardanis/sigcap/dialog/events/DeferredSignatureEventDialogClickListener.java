@@ -10,7 +10,7 @@ import java.lang.ref.WeakReference;
 public abstract class DeferredSignatureEventDialogClickListener implements DialogInterface.OnClickListener {
 
     public interface EventListenerDelegate {
-        public SignatureEventListener getEventListener();
+        public SignatureEventListener getSignatureEventListener();
     }
 
     protected WeakReference<SignatureInputView> inputView = new WeakReference<SignatureInputView>(null);
@@ -34,6 +34,6 @@ public abstract class DeferredSignatureEventDialogClickListener implements Dialo
         if (delegate == null)
             return null;
 
-        return delegate.getEventListener();
+        return delegate.getSignatureEventListener();
     }
 }

@@ -154,7 +154,7 @@ public class SignatureDialogFragment extends DialogFragment
     }
 
     @Override
-    public SignatureEventListener getEventListener() {
+    public SignatureEventListener getSignatureEventListener() {
         return eventListener.get();
     }
 }

@@ -124,7 +124,7 @@ open class AppCompatSignatureDialogFragment: AppCompatDialogFragment(),
         return this
     }
 
-    override fun getEventListener(): SignatureEventListener? {
+    override fun getSignatureEventListener(): SignatureEventListener? {
         return eventListener.get()
     }
 
