@@ -17,10 +17,18 @@ public class SignatureResponse {
         this.result = result;
     }
 
+    /**
+     * Get the {@link Bitmap} result
+     */
     public Bitmap getResult() {
         return result;
     }
 
+    /**
+     * Asynchronously save the generated {@link Bitmap} result
+     * to a new {@link File} created from our {@link FileCache} and
+     * return a {@link Future} to it.
+     */
     public Future<File> saveToFileCache(final Context context) {
         return Executors.newSingleThreadExecutor()
                 .submit(new Callable<File>() {

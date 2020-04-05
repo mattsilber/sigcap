@@ -31,6 +31,12 @@ public class SignatureRequest implements Parcelable {
         return resultBackgroundColor;
     }
 
+    /**
+     * Set a background color for the {@link android.graphics.Bitmap} that will
+     * be generated upon a successful submission of a signature.
+     *
+     * This will not affect the active rendering of the {@link SignatureInputView}
+     */
     public SignatureRequest setResultBackgroundColor(int resultBackgroundColor) {
         this.resultBackgroundColor = resultBackgroundColor;
 
@@ -42,8 +48,13 @@ public class SignatureRequest implements Parcelable {
     }
 
     /**
-     * @param resultIncludeBaseline to show or not show te visible baseline.
-     *      Value is ignored when ResultCropStrategy.SIGNATURE_BOUNDS is being used.
+     * Set whether or not to draw the bottom baseline for the
+     * {@link android.graphics.Bitmap} that will be generated upon a successful
+     * submission of a signature.
+     *
+     * This will not affect the active rendering of the {@link SignatureInputView}
+     *
+     * Note: Value is ignored when ResultCropStrategy.SIGNATURE_BOUNDS is being used
      */
     public SignatureRequest setResultIncludeBaseline(boolean resultIncludeBaseline) {
         this.resultIncludeBaseline = resultIncludeBaseline;
@@ -56,8 +67,13 @@ public class SignatureRequest implements Parcelable {
     }
 
     /**
-     * @param resultIncludeBaselineXMark to show or not show te baseline x-Mark.
-     *      Value is ignored when ResultCropStrategy.SIGNATURE_BOUNDS is being used.
+     * Set whether or not to draw the bottom baseline x-mark for the
+     * {@link android.graphics.Bitmap} that will be generated upon a successful
+     * submission of a signature.
+     *
+     * This will not affect the active rendering of the {@link SignatureInputView}
+     *
+     * Note: Value is ignored when ResultCropStrategy.SIGNATURE_BOUNDS is being used
      */
     public SignatureRequest setResultIncludeBaselineXMark(boolean resultIncludeBaselineXMark) {
         this.resultIncludeBaselineXMark = resultIncludeBaselineXMark;
@@ -69,6 +85,20 @@ public class SignatureRequest implements Parcelable {
         return resultCropStrategy;
     }
 
+    /**
+     * Set the strategy for rendering the signature to the {@link android.graphics.Bitmap}
+     * that will be generated upon a successful submission of a signature.
+     *
+     * CANVAS_BOUNDS, the default, will render the signature to a {@link android.graphics.Bitmap}
+     * generated from same boundaries as the canvas in which the signature was created from.
+     *
+     * SIGNATURE_BOUNDS will create a {@link android.graphics.Bitmap} from the minimum
+     * and maximum boundaries of all collected {@link com.guardanis.sigcap.paths.SignaturePath}
+     * instances, so that no visual cropping occurs in the result. This mode cannot be used with
+     * baseline or baseline-x-mark drawing (for now).
+     *
+     * This will not affect the active rendering of the {@link SignatureInputView}
+     */
     public SignatureRequest setResultCropStrategy(ResultCropStrategy resultCropStrategy) {
         this.resultCropStrategy = resultCropStrategy;
 

@@ -32,6 +32,8 @@ R.dimen.sig__default_baseline_height
 R.dimen.sig__default_baseline_x_mark
 ```
 
+With matching resources names of:
+
 ```
 R.dimen.sig__default_signature_stroke_width
 R.dimen.sig__default_baseline_stroke_width
