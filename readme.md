@@ -48,15 +48,12 @@ SignatureEventListener eventListener = new SignatureEventListener() {
     }
                                                    
     @Override
-    public void onSignatureInputCanceled() {
-        Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
-            .show();
-    }
-                                                   
-    @Override
     public void onSignatureInputError(Throwable e) {
         if (e instanceof NoSignatureException) {
             // They clicked confirm without entering anything
+        }
+        else if (e instanceof CanceledSignatureInputException) {
+            // They clicked cancel
         }
         else {
             Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)

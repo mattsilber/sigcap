@@ -1,8 +1,32 @@
 # Migrating from Version 1x to Version 2x
 
-Replace instances of `SignatureDialogBuilder.show(Activity, SignatureDialogBuilder.SignatureEventListener)` with:
+### SignatureDialogBuilder
+
+Replace instances of  
+
+`SignatureDialogBuilder.show(Activity, SignatureDialogBuilder.SignatureEventListener)`
+
+With:
 
 `SignatureDialogBuilder.showStatelessAlertDialog(Activity, SignatureEventListener)` 
+
+### SignatureEventListener
+
+`com.guardanis.sigcap.SignatureDialogBuilder.SignatureEventListener` has been renamed to `com.guardanis.sigcap.SignatureEventListener`
+
+`SignatureEventListener.onSignatureInputCanceled()` has been removed. Replace overridden instances with a check for a `CanceledSignatureInputException` in `onSignatureInputError(Throwable)`. e.g.:
+
+```java
+@Override
+public void onSignatureInputError(Throwable e) { 
+    if (e instanceof CanceledSignatureInputException) {
+        // They canceled the Dialog
+    }    
+    ...
+}
+```
+
+### Styleables
 
 And replace overridden resource styleables of:
 
@@ -24,6 +48,8 @@ baselineXMarkLength
 baselineXMarkOffsetVertical
 ```
 
+### Resources
+
 And replace overridden resource values of:
 
 ```
@@ -40,9 +66,9 @@ R.dimen.sig__default_baseline_stroke_width
 R.dimen.sig__default_baseline_x_mark_length
 ```
 
-And you're done!...
+### Addendum
 
-Or, you can implement one of the new, `DialogFragment`-friendly methods:
+You can now also implement one of the new, `DialogFragment`-friendly `SignatureDialogBuilder` methods:
 
 `SignatureDialogBuilder.showDialogFragment(FragmentManager)`
 `SignatureDialogBuilder.showDialogFragment(FragmentManager, String)`
