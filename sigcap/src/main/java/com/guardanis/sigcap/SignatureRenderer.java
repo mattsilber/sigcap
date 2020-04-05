@@ -172,16 +172,13 @@ public class SignatureRenderer implements Parcelable {
 
     public void drawBaselineXMark(Canvas canvas) {
         int radius = baselineXMarkLength / 2;
-        int cX = baselinePaddingHorizontal + radius;
+        int cX = baselinePaddingHorizontal + baselineXMarkOffsetHorizontal + radius;
         int cY = canvas.getHeight() - baselinePaddingBottom - radius - baselineXMarkOffsetVertical;
 
         canvas.save();
         canvas.rotate(-45, cX, cY);
         canvas.drawLine(cX - radius, cY, cX + radius, cY, baselineXMarkPaint);
-        canvas.restore();
-
-        canvas.save();
-        canvas.rotate(45, cX, cY);
+        canvas.rotate(90, cX, cY);
         canvas.drawLine(cX - radius, cY, cX + radius, cY, baselineXMarkPaint);
         canvas.restore();
     }
