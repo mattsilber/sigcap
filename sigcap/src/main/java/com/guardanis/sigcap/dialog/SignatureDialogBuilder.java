@@ -15,6 +15,7 @@ import com.guardanis.sigcap.SignatureRenderer;
 import com.guardanis.sigcap.SignatureRequest;
 import com.guardanis.sigcap.SignatureResponse;
 import com.guardanis.sigcap.dialog.events.UndoLastSignatureClickListener;
+import com.guardanis.sigcap.exceptions.CanceledSignatureInputException;
 import com.guardanis.sigcap.exceptions.NoSignatureException;
 import com.guardanis.sigcap.paths.SignaturePathManager;
 
@@ -215,7 +216,8 @@ public class SignatureDialogBuilder {
                 })
                 .setNegativeButton(R.string.sig__default_dialog_action_cancel, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        eventListener.onSignatureInputCanceled();
+                        eventListener.onSignatureInputError(
+                                new CanceledSignatureInputException());
                     }
                 })
                 .show();

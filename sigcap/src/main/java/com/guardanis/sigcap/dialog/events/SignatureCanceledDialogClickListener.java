@@ -3,6 +3,7 @@ package com.guardanis.sigcap.dialog.events;
 import android.content.DialogInterface;
 
 import com.guardanis.sigcap.SignatureEventListener;
+import com.guardanis.sigcap.exceptions.CanceledSignatureInputException;
 
 public class SignatureCanceledDialogClickListener extends DeferredSignatureEventDialogClickListener {
 
@@ -13,6 +14,7 @@ public class SignatureCanceledDialogClickListener extends DeferredSignatureEvent
         if (eventListener == null)
             return;
 
-        eventListener.onSignatureInputCanceled();
+        eventListener.onSignatureInputError(
+                new CanceledSignatureInputException());
     }
 }

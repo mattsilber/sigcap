@@ -11,6 +11,7 @@ import com.guardanis.sigcap.*
 import com.guardanis.sigcap.androidx.showAppCompatDialogFragment
 import com.guardanis.sigcap.dialog.SignatureDialogBuilder
 import com.guardanis.sigcap.dialog.SignatureDialogFragment
+import com.guardanis.sigcap.exceptions.CanceledSignatureInputException
 import com.guardanis.sigcap.exceptions.NoSignatureException
 
 class MainActivity: AppCompatActivity(), SignatureEventListener {
@@ -96,18 +97,23 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
                 })
     }
 
-    override fun onSignatureInputCanceled() {
-        Toast.makeText(this, "Signature input canceled", Toast.LENGTH_SHORT)
-                .show()
-    }
-
     override fun onSignatureInputError(e: Throwable) {
-        if (e is NoSignatureException) {
-            Toast.makeText(this, "Signature not entered", Toast.LENGTH_SHORT)
-                    .show()
+        when (e) {
+            is NoSignatureException -> {
+                // The user submitted a signature without actually drawing one
+                Toast.makeText(this, "Signature submitted, but not entered", Toast.LENGTH_SHORT)
+                        .show()
+            }
+            is CanceledSignatureInputException -> {
+                // The user canceled the dialog without submitting anything
+                Toast.makeText(this, "Signature input canceled", Toast.LENGTH_SHORT)
+                        .show()
+            }
+            else -> {
+                // Something weird happened
+                Toast.makeText(this, "Signature error", Toast.LENGTH_SHORT)
+                        .show()
+            }
         }
-
-        Toast.makeText(this, "Signature error", Toast.LENGTH_SHORT)
-                .show()
     }
 }

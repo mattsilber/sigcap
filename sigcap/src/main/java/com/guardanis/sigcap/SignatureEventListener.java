@@ -17,16 +17,15 @@ public interface SignatureEventListener {
     public void onSignatureEntered(SignatureResponse response);
 
     /**
-     * Called when the user cancels the {@link android.app.Dialog}
-     * without submitting a {@link SignatureResponse}
-     */
-    public void onSignatureInputCanceled();
-
-    /**
-     * Called when the system encounters any form of error. If a user
-     * attempts to submit a {@link SignatureResponse} with no
-     * {@link com.guardanis.sigcap.paths.SignaturePath} data, it will
-     * be called with a {@link com.guardanis.sigcap.exceptions.NoSignatureException}
+     * Called when the system encounters any form of error.
+     *
+     * A {@link com.guardanis.sigcap.exceptions.CanceledSignatureInputException} will be
+     * passed if a user cancels the {@link android.app.Dialog} without submitting
+     * a {@link SignatureResponse}.
+     *
+     * A {@link com.guardanis.sigcap.exceptions.NoSignatureException} will be
+     * passed if a user attempts to submit a {@link SignatureResponse} with no
+     * {@link com.guardanis.sigcap.paths.SignaturePath} data.
      *
      * @param error whatever error has been thrown
      */
