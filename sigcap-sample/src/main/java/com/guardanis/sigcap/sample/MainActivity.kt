@@ -48,7 +48,8 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
                 .setRenderer(
                         SignatureRenderer(resources)
                                 .setSignaturePaintColor(Color.BLACK)
-                                .setBaselinePaintColor(Color.BLACK))
+                                .setBaselinePaintColor(Color.DKGRAY)
+                                .setBaselineXMarkPaintColor(Color.GRAY))
                 // Optionally disable automatically attaching the Activity/Fragment
                 // as the SignatureEventListsner instance when re-attaching
                 .setAutoAttachEventListenerEnabled(false)
