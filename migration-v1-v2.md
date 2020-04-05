@@ -26,6 +26,8 @@ public void onSignatureInputError(Throwable e) {
 }
 ```
 
+`SignatureEventListener.onSignatureEntered(Bitmap)` method signature has changed to `SignatureEventListener.onSignatureEntered(SignatureResponse)`. The resulting `Bitmap` can be obtained by calling `SignatureResponse.getResult()`, and a file can be manually generated via `SignatureResponse.saveToFileCache(Context)`.
+
 ### Styleables
 
 And replace overridden resource styleables of:
