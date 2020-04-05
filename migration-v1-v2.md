@@ -4,7 +4,41 @@ Replace instances of `SignatureDialogBuilder.show(Activity, SignatureDialogBuild
 
 `SignatureDialogBuilder.showStatelessAlertDialog(Activity, SignatureEventListener)` 
 
-Done!...
+And replace overridden resource styleables of:
+
+```
+baseline_height
+baseline_paddingHorizontal
+baseline_paddingBottom
+baseline_x_mark
+baseline_x_mark_offsetVertical
+```
+
+With matching keys of:
+
+```
+baselineStrokeWidth
+baselinePaddingHorizontal
+baselinePaddingBottom
+baselineXMarkLength
+baselineXMarkOffsetVertical
+```
+
+And replace overridden resource values of:
+
+```
+R.dimen.sig__default_signature_stroke
+R.dimen.sig__default_baseline_height
+R.dimen.sig__default_baseline_x_mark
+```
+
+```
+R.dimen.sig__default_signature_stroke_width
+R.dimen.sig__default_baseline_stroke_width
+R.dimen.sig__default_baseline_x_mark_length
+```
+
+And you're done!...
 
 Or, you can implement one of the new, `DialogFragment`-friendly methods:
 

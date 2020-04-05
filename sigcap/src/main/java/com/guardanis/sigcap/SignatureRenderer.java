@@ -1,6 +1,7 @@
 package com.guardanis.sigcap;
 
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,29 +22,91 @@ public class SignatureRenderer implements Parcelable {
     private int signatureStrokeWidth = 1;
 
     private Paint baselinePaint = new Paint();
-    private int baselinePaintColor = Color.WHITE;
+    private int baselinePaintColor = Color.BLACK;
     private int baselineStrokeWidth = 1;
+    private int baselinePaddingHorizontal = 12;
+    private int baselinePaddingBottom = 12;
 
-    private int baselinePaddingHorizontal = 0;
-    private int baselinePaddingBottom = 0;
-    private int baselineXMark = 0;
-    private int baselineXMarkOffsetVertical = 0;
+    private Paint baselineXMarkPaint = new Paint();
+    private int baselineXMarkPaintColor = Color.BLACK;
+    private int baselineXMarkStrokeWidth = 1;
+    private int baselineXMarkLength = 12;
+    private int baselineXMarkOffsetHorizontal = 12;
+    private int baselineXMarkOffsetVertical = 10;
 
     public SignatureRenderer() {
         setupPaintDefaults();
     }
 
+    /**
+     * A {@link SignatureRenderer} styled with the default {@link Resources}
+     */
     public SignatureRenderer(Resources resources) {
-        this.baselinePaddingHorizontal = (int) resources.getDimension(R.dimen.sig__default_baseline_padding_horizontal);
-        this.baselinePaddingBottom = (int) resources.getDimension(R.dimen.sig__default_baseline_padding_bottom);
-        this.baselineXMark = (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark);
-        this.baselineXMarkOffsetVertical = (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical);
-
         this.signaturePaintColor = resources.getColor(R.color.sig__default_signature);
-        this.signatureStrokeWidth = (int) resources.getDimension(R.dimen.sig__default_signature_stroke);
+        this.signatureStrokeWidth = (int) resources.getDimension(R.dimen.sig__default_signature_stroke_width);
 
         this.baselinePaintColor = resources.getColor(R.color.sig__default_baseline);
-        this.baselineStrokeWidth = (int) resources.getDimension(R.dimen.sig__default_baseline_height);
+        this.baselineStrokeWidth = (int) resources.getDimension(R.dimen.sig__default_baseline_stroke_width);
+        this.baselinePaddingHorizontal = (int) resources.getDimension(R.dimen.sig__default_baseline_padding_horizontal);
+        this.baselinePaddingBottom = (int) resources.getDimension(R.dimen.sig__default_baseline_padding_bottom);
+
+        this.baselineXMarkPaintColor = resources.getColor(R.color.sig__default_baseline_x_mark);
+        this.baselineXMarkStrokeWidth = (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_stroke_width);
+        this.baselineXMarkLength = (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_length);
+        this.baselineXMarkOffsetHorizontal = (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_offset_horizontal);
+        this.baselineXMarkOffsetVertical = (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical);
+
+        setupPaintDefaults();
+    }
+
+    /**
+     * A {@link SignatureRenderer} styled with the supplied {@link TypedArray}
+     *      and default {@link Resources}
+     */
+    public SignatureRenderer(Resources resources, TypedArray attributes) {
+        this.signaturePaintColor = attributes.getColor(
+                R.styleable.SignatureInputView_signatureColor,
+                resources.getColor(R.color.sig__default_signature));
+
+        this.signatureStrokeWidth = attributes.getColor(
+                R.styleable.SignatureInputView_signatureStrokeWidth,
+                (int) resources.getDimension(R.dimen.sig__default_signature_stroke_width));
+
+        this.baselinePaintColor = attributes.getColor(
+                R.styleable.SignatureInputView_baselineColor,
+                resources.getColor(R.color.sig__default_baseline));
+
+        this.baselineStrokeWidth = attributes.getColor(
+                R.styleable.SignatureInputView_baselineStrokeWidth,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_stroke_width));
+
+        this.baselinePaddingHorizontal = attributes.getInt(
+                R.styleable.SignatureInputView_baselinePaddingHorizontal,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_padding_horizontal));
+
+        this.baselinePaddingBottom = attributes.getInt(
+                R.styleable.SignatureInputView_baselinePaddingBottom,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_padding_bottom));
+
+        this.baselineXMarkPaintColor = attributes.getColor(
+                R.styleable.SignatureInputView_baselineXMarkColor,
+                resources.getColor(R.color.sig__default_baseline_x_mark));
+
+        this.baselineXMarkStrokeWidth = attributes.getColor(
+                R.styleable.SignatureInputView_baselineXMarkStrokeWidth,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_stroke_width));
+
+        this.baselineXMarkLength = attributes.getInt(
+                R.styleable.SignatureInputView_baselineXMarkLength,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_length));
+
+        this.baselineXMarkOffsetHorizontal = attributes.getInt(
+                R.styleable.SignatureInputView_baselineXMarkOffsetHorizontal,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_offset_horizontal));
+
+        this.baselineXMarkOffsetVertical = attributes.getInt(
+                R.styleable.SignatureInputView_baselineXMarkOffsetVertical,
+                (int) resources.getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical));
 
         setupPaintDefaults();
     }
@@ -51,11 +114,16 @@ public class SignatureRenderer implements Parcelable {
     protected SignatureRenderer(Parcel in) {
         this.signaturePaintColor = in.readInt();
         this.signatureStrokeWidth = in.readInt();
+
         this.baselinePaintColor = in.readInt();
         this.baselineStrokeWidth = in.readInt();
         this.baselinePaddingHorizontal = in.readInt();
         this.baselinePaddingBottom = in.readInt();
-        this.baselineXMark = in.readInt();
+
+        this.baselineXMarkPaintColor = in.readInt();
+        this.baselineXMarkStrokeWidth = in.readInt();
+        this.baselineXMarkLength = in.readInt();
+        this.baselineXMarkOffsetHorizontal = in.readInt();
         this.baselineXMarkOffsetVertical = in.readInt();
 
         setupPaintDefaults();
@@ -73,6 +141,12 @@ public class SignatureRenderer implements Parcelable {
         baselinePaint.setStrokeWidth(baselineStrokeWidth);
         baselinePaint.setStyle(Paint.Style.FILL_AND_STROKE);
         baselinePaint.setStrokeCap(Paint.Cap.ROUND);
+
+        baselineXMarkPaint.setAntiAlias(true);
+        baselineXMarkPaint.setColor(baselineXMarkPaintColor);
+        baselineXMarkPaint.setStrokeWidth(baselineXMarkStrokeWidth);
+        baselineXMarkPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        baselineXMarkPaint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     public void drawPathManager(Canvas canvas, SignaturePathManager manager) {
@@ -97,18 +171,18 @@ public class SignatureRenderer implements Parcelable {
     }
 
     public void drawBaselineXMark(Canvas canvas) {
-        int radius = baselineXMark / 2;
+        int radius = baselineXMarkLength / 2;
         int cX = baselinePaddingHorizontal + radius;
         int cY = canvas.getHeight() - baselinePaddingBottom - radius - baselineXMarkOffsetVertical;
 
         canvas.save();
         canvas.rotate(-45, cX, cY);
-        canvas.drawLine(cX - radius, cY, cX + radius, cY, baselinePaint);
+        canvas.drawLine(cX - radius, cY, cX + radius, cY, baselineXMarkPaint);
         canvas.restore();
 
         canvas.save();
         canvas.rotate(45, cX, cY);
-        canvas.drawLine(cX - radius, cY, cX + radius, cY, baselinePaint);
+        canvas.drawLine(cX - radius, cY, cX + radius, cY, baselineXMarkPaint);
         canvas.restore();
     }
 
@@ -210,8 +284,28 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
-    public SignatureRenderer setBaselineXMark(int baselineXMark) {
-        this.baselineXMark = baselineXMark;
+    public SignatureRenderer setBaselineXMarkPaintColor(int baselineXMarkPaintColor) {
+        this.baselineXMarkPaintColor = baselineXMarkPaintColor;
+        this.baselineXMarkPaint.setColor(baselineXMarkPaintColor);
+
+        return this;
+    }
+
+    public SignatureRenderer setBaselineXMarkStrokeWidth(int baselineXMarkStrokeWidth) {
+        this.baselineXMarkStrokeWidth = baselineXMarkStrokeWidth;
+        this.baselineXMarkPaint.setStrokeWidth(baselineStrokeWidth);
+
+        return this;
+    }
+
+    public SignatureRenderer setBaselineXMarkLength(int baselineXMark) {
+        this.baselineXMarkLength = baselineXMark;
+
+        return this;
+    }
+
+    public SignatureRenderer setBaselineXMarkOffsetHorizontal(int baselineXMarkOffsetHorizontal) {
+        this.baselineXMarkOffsetHorizontal = baselineXMarkOffsetHorizontal;
 
         return this;
     }
@@ -235,11 +329,16 @@ public class SignatureRenderer implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(signaturePaintColor);
         dest.writeInt(signatureStrokeWidth);
+
         dest.writeInt(baselinePaintColor);
         dest.writeInt(baselineStrokeWidth);
         dest.writeInt(baselinePaddingHorizontal);
         dest.writeInt(baselinePaddingBottom);
-        dest.writeInt(baselineXMark);
+
+        dest.writeInt(baselineXMarkPaintColor);
+        dest.writeInt(baselineXMarkStrokeWidth);
+        dest.writeInt(baselineXMarkLength);
+        dest.writeInt(baselineXMarkOffsetHorizontal);
         dest.writeInt(baselineXMarkOffsetVertical);
     }
 

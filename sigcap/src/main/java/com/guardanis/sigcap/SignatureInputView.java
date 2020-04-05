@@ -73,37 +73,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
      * @return a {@link SignatureRenderer} styled with the supplied {@link TypedArray}
      */
     protected SignatureRenderer generateSignatureRenderer(TypedArray attributes) {
-        int signatureColor = attributes.getColor(
-                R.styleable.SignatureInputView_signatureColor,
-                getResources().getColor(R.color.sig__default_signature));
-
-        int baselineColor = attributes.getColor(
-                R.styleable.SignatureInputView_baselineColor,
-                getResources().getColor(R.color.sig__default_baseline));
-
-        int baselinePaddingHorizontal = attributes.getInt(
-                R.styleable.SignatureInputView_baseline_paddingHorizontal,
-                (int) getResources().getDimension(R.dimen.sig__default_baseline_padding_horizontal));
-
-        int baselinePaddingBottom = attributes.getInt(
-                R.styleable.SignatureInputView_baseline_paddingBottom,
-                (int) getResources().getDimension(R.dimen.sig__default_baseline_padding_bottom));
-
-        int baselineXMark = attributes.getInt(
-                R.styleable.SignatureInputView_baseline_x_mark,
-                (int) getResources().getDimension(R.dimen.sig__default_baseline_x_mark));
-
-        int baselineXMarkOffsetVertical = attributes.getInt(
-                R.styleable.SignatureInputView_baseline_x_mark_offsetVertical,
-                (int) getResources().getDimension(R.dimen.sig__default_baseline_x_mark_offset_vertical));
-
-        return new SignatureRenderer(getResources())
-                .setSignaturePaintColor(signatureColor)
-                .setBaselinePaintColor(baselineColor)
-                .setBaselinePaddingBottom(baselinePaddingBottom)
-                .setBaselinePaddingHorizontal(baselinePaddingHorizontal)
-                .setBaselineXMark(baselineXMark)
-                .setBaselineXMarkOffsetVertical(baselineXMarkOffsetVertical);
+        return new SignatureRenderer(getResources(), attributes);
     }
 
     @Override

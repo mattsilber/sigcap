@@ -1,13 +1,17 @@
 <resources>
 
     <declare-styleable name="SignatureInputView">
-        <attr name="baselineColor" format="reference|color" />
         <attr name="signatureColor" format="reference|color" />
-        <attr name="baseline_height" format="reference|dimension" />
-        <attr name="baseline_paddingHorizontal" format="reference|dimension" />
-        <attr name="baseline_paddingBottom" format="reference|dimension" />
-        <attr name="baseline_x_mark" format="reference|dimension" />
-        <attr name="baseline_x_mark_offsetVertical" format="reference|dimension" />
+        <attr name="signatureStrokeWidth" format="reference|color" />
+        <attr name="baselineColor" format="reference|color" />
+        <attr name="baselineStrokeWidth" format="reference|dimension" />
+        <attr name="baselinePaddingHorizontal" format="reference|dimension" />
+        <attr name="baselinePaddingBottom" format="reference|dimension" />
+        <attr name="baselineXMarkColor" format="reference|color" />
+        <attr name="baselineXMarkStrokeWidth" format="reference|dimension" />
+        <attr name="baselineXMarkLength" format="reference|dimension" />
+        <attr name="baselineXMarkOffsetHorizontal" format="reference|dimension" />
+        <attr name="baselineXMarkOffsetVertical" format="reference|dimension" />
     </declare-styleable>
 
 </resources>
