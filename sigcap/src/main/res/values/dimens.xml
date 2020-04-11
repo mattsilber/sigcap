@@ -2,13 +2,16 @@
 
     <dimen name="sig__default_dialog_input_view_height">125dip</dimen>
 
-    <dimen name="sig__default_baseline_height">1dip</dimen>
+    <dimen name="sig__default_baseline_stroke_width">1dip</dimen>
     <dimen name="sig__default_baseline_padding_horizontal">16dip</dimen>
     <dimen name="sig__default_baseline_padding_bottom">12dip</dimen>
-    <dimen name="sig__default_baseline_x_mark">12dip</dimen>
+
+    <dimen name="sig__default_baseline_x_mark_length">12dip</dimen>
+    <dimen name="sig__default_baseline_x_mark_stroke_width">@dimen/sig__default_baseline_stroke_width</dimen>
+    <dimen name="sig__default_baseline_x_mark_offset_horizontal">0px</dimen>
     <dimen name="sig__default_baseline_x_mark_offset_vertical">10dip</dimen>
 
-    <dimen name="sig__default_signature_stroke">2dip</dimen>
+    <dimen name="sig__default_signature_stroke_width">2dip</dimen>
 
     <dimen name="sig__default_dialog_action_undo">45dip</dimen>
     <dimen name="sig__default_dialog_action_undo_padding">12dip</dimen>

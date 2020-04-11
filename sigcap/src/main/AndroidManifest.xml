@@ -1,4 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.guardanis.sigcap">
-
-</manifest>
+<manifest package="com.guardanis.sigcap"/>

@@ -1,5 +1,7 @@
 # sigcap
 
+[![Download](https://api.bintray.com/packages/mattsilber/maven/sigcap/images/download.svg) ](https://bintray.com/mattsilber/maven/sigcap/_latestVersion)
+
 This library is intended to help capture signatures with an easily-configurable style.
 
 ![sigcap Sample](https://github.com/mattsilber/sigcap/raw/master/sigcap.gif)
@@ -12,47 +14,93 @@ repositories {
 }
 
 dependencies {
-    compile('com.guardanis:sigcap:1.0.1')
+    compile('com.guardanis:sigcap:2+')
+    compile('com.guardanis:sigcap-androidx:2+')
 }
 ```
 
 ### Usage
 
-The basic component is the *SignatureInputView* which actually handles the touch-to-draw events for the signature, as well as the drawing for the baseline (and x-marker). All the default styling values can be overriden at the resource-level, or at the implementation level with the styled attributes.
+The basic component is the `SignatureInputView` which delegates the touch/draw handling to respective `SignatureTouchController`/`SignatureRenderer` instances. All the default styling values can be overriden at the resource-level, at the implementation level with the styled attributes, or by applying a custom `SignatureRenderer` instance.
 
-If you want to implement the undo action outside the default dialog, you'd have to manually call *SignatureInputView.undoLastSignaturePath()*.
+If you want to implement the undo action outside the default dialog, you'd have to manually call `SignatureInputView.undoLastSignaturePath()`.
 
-Calling *SignatureInputView.saveSignature()* will attempt to save the drawing cache of the SignatureInputView into a File and return the result if it's successful. Please note, it is highly recommended you delete the signature file after you're done using it.
+Calling `SignatureInputView.saveSignature()` will render the signature `Path` instances into a `Bitmap` and return it wrapped inside a `SignatureResponse`. You can configure result rendering options (like baseline visibility) by supplying custom `SignatureRequest` options before saving.
+
+If you want to save the response to a file, you can call `SignatureResponse.saveToFileCache` which will return a Future to the `File` the signature's Bitmap was stored in. Make sure to delete the signature file once you're done with it.
 
 ### SignatureDialogBuilder
 
-This helper class is all you need to integrate sigcap (unless you really want to get fancy), with strings and colors easily overriden through the resources (same as the default resources mentioned above).
+This helper class is all you need to integrate `sigcap`, with text and colors easily overridden through the resources (same as the default resources mentioned above).
 
-Here's an example of how to call the SignatureDialogBuilder, from the gif example above:
+If all you want to do is show a Dialog and you don't care about orientation changes or state, just create a `SignatureEventListener` and pass it to your `SignatureDialogBuilder` instance:
 
 ```java
+SignatureEventListener eventListener = new SignatureEventListener() {
+    
+    @Override
+    public void onSignatureEntered(SignatureResponse response) {
+        Bitmap signatureImage = response.getResult();
+                                                           
+        // Alternatively store the Bitmap response in a File
+        File savedFile = response.saveToFileCache()
+            .get();
+    }
+                                                   
+    @Override
+    public void onSignatureInputError(Throwable e) {
+        if (e instanceof NoSignatureException) {
+            // They clicked confirm without entering anything
+        }
+        else if (e instanceof CanceledSignatureInputException) {
+            // They clicked cancel
+        }
+        else {
+            Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
+                .show();
+        }
+     }                                                  
+};
+
 new SignatureDialogBuilder()
-    .show(this, new SignatureDialogBuilder.SignatureEventListener() {
-        @Override
-        public void onSignatureEntered(File savedFile) {
-            new ImageRequest(MainActivity.this, findViewById(R.id.test_image))
-                .setTargetFile(savedFile)
-                .setFadeTransition()
-                .execute(); // Just showing the image 
-            }
-            
-            @Override
-            public void onSignatureInputCanceled() {
-                Toast.makeText(MainActivity.this, "Signature input canceled", Toast.LENGTH_SHORT)
-                    .show();
-            }
-            
-            @Override
-            public void onSignatureInputError(Throwable e) {
-                if(e instanceof NoSignatureException) // They clicked confirm without entering anything
-                    // doSomethingOnNoSignatureEntered();
-                else Toast.makeText(MainActivity.this, "Signature error", Toast.LENGTH_SHORT)
-                    .show();
-            }
-    });
+    .showStatelessAlertDialog(this, eventListener);
 ```
+
+Or you can create a `SignatureDialogFragment`:
+
+```java
+String tag = "fragment_tag";
+
+// Display the `SignatureDialogFragment`
+new SignatureDialogBuilder()
+    .showDialogFragment(this, tag, eventListener);
+
+// Find the `SignatureDialogFragment` and set the `SignatureEventListener`
+// If your `Activity` or calling `Fragment` does not implement `SignatureEventListener`, you
+// will need to manually reset the `SignatureEventListener` when restoring.
+SignatureDialogFragment fragment = (SignatureDialogFragment) getFragmentManager()
+    .findFragmentByTag(tag);
+
+if (fragment != null) {
+    fragment.setSignatureEventListener(eventListener);
+}
+```
+
+Or, using the `sigcap-androidx` components, you can create an `AppCompatSignatureDialogFragment`:
+
+```kotlin
+// Display the `AppCompatSignatureDialogFragment`
+SignatureDialogBuilder()
+    .showAppCompatDialogFragment(supportFragmentManager, tag, eventListener)
+    
+// Find the `AppCompatSignatureDialogFragment` and set the `SignatureEventListener`
+// If your `Activity` or calling `Fragment` does not implement `SignatureEventListener`, you
+// will need to manually reset the `SignatureEventListener` when restoring.
+supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
+    ?.setSignatureEventListener(eventListener)
+
+```
+
+### Migrating Version 1x to Version 2x
+
+Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v1-v2.md).
