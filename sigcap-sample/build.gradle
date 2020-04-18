@@ -24,9 +24,17 @@ android {
     }
 }
 
+
+repositories {
+    maven { url  "https://dl.bintray.com/mattsilber/maven" }
+}
+
 dependencies {
     implementation project(path: ':sigcap')
     implementation project(path: ':sigcap-androidx')
+
+//    implementation "com.guardanis:sigcap:2.0.0"
+//    implementation "com.guardanis:sigcap-androidx:2.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 

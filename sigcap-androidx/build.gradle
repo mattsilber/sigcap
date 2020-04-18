@@ -61,4 +61,4 @@ task javadocJar(type: Jar, dependsOn: dokka) {
     from dokka.outputDirectory
 }
 
-apply from: project.rootProject.file('deployments.gradle')
+//apply from: project.rootProject.file('deployments.gradle')

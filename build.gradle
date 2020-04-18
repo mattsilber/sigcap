@@ -26,7 +26,6 @@ allprojects {
         }
 
         dependencies {
-//            classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradle_bintray_plugin_version"
             classpath "com.android.tools.build:gradle:3.6.2"
         }
     }

@@ -44,9 +44,8 @@ afterEvaluate {
     publishing {
         publications {
             BintrayPublication(MavenPublication) {
+                // from components.release
                 artifact "$buildDir/outputs/aar/$mavProjectName-release.aar"
-//                from components.release
-//                artifact bundleReleaseAar
                 artifact sourcesJar
                 artifact javadocJar
 
