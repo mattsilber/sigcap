@@ -24,11 +24,6 @@ android {
     }
 }
 
-
-repositories {
-    maven { url  "https://dl.bintray.com/mattsilber/maven" }
-}
-
 dependencies {
     implementation project(path: ':sigcap')
     implementation project(path: ':sigcap-androidx')
