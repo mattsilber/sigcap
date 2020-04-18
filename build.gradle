@@ -17,9 +17,6 @@ allprojects {
 
         mavSiteUrl = 'https://github.com/mattsilber/sigcap'
         mavGitUrl = 'https://github.com/mattsilber/sigcap.git'
-        mavLibraryLicenses = [
-                "Apache-2.0": 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-        ]
     }
 
     buildscript {
@@ -29,7 +26,7 @@ allprojects {
         }
 
         dependencies {
-            classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradle_bintray_plugin_version"
+//            classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradle_bintray_plugin_version"
             classpath "com.android.tools.build:gradle:3.6.2"
         }
     }

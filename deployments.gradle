@@ -16,12 +16,36 @@ task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
+def pomConfig = {
+    licenses {
+        license {
+            name "The Apache Software License, Version 2.0"
+            url "http://www.apache.org/licenses/LICENSE-2.0.txt"
+            distribution "repo"
+        }
+    }
+
+    developers {
+        developer {
+            id "mattsilber"
+            name "Matt Silber"
+            email "matt@guardanis.com"
+        }
+    }
+
+    scm {
+        connection mavGitUrl
+        developerConnection mavGitUrl
+        url mavSiteUrl
+    }
+}
+
 afterEvaluate {
     publishing {
         publications {
             BintrayPublication(MavenPublication) {
-//            artifact "$buildDir/outputs/aar/$mavProjectName-release.aar"
-                from components.release
+                artifact "$buildDir/outputs/aar/$mavProjectName-release.aar"
+//                from components.release
 //                artifact bundleReleaseAar
                 artifact sourcesJar
                 artifact javadocJar
@@ -30,20 +54,22 @@ afterEvaluate {
                 artifactId mavProjectName
                 version mavLibraryVersion
 
-                pom {
-                    name = mavProjectName
-                    description = mavLibraryDescription
-                    url = mavSiteUrl
+                pom.withXml {
+                    def root = asNode()
+                    root.appendNode('name', mavProjectName)
+                    root.appendNode('description', mavLibraryDescription)
+                    root.appendNode('url', mavSiteUrl)
+                    root.children().last() + pomConfig
 
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    def dependenciesNode = root.getAt('dependencies')[0] ?: root.appendNode('dependencies')
+
+                    configurations.implementation.allDependencies.each {
+                        if (it.name != 'unspecified') {
+                            def dependencyNode = dependenciesNode.appendNode('dependency')
+                            dependencyNode.appendNode('groupId', it.group)
+                            dependencyNode.appendNode('artifactId', it.name)
+                            dependencyNode.appendNode('version', it.version)
                         }
-                    }
-
-                    scm {
-                        url = mavGitUrl
                     }
                 }
             }
