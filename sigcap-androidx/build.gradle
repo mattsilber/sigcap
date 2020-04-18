@@ -2,17 +2,15 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradle_bintray_plugin_version"
-        classpath "com.novoda:gradle-android-command-plugin:$gradle_android_Command_plugin_version"
-
-        //TODO: Investigate migration
-        //Abandoned. If you are using Kotlin 1.3.30+ and Gradle 5.x, please use https://github.com/sky-uk/gradle-maven-plugin instead.
-        classpath "com.github.dcendents:android-maven-gradle-plugin:$android_maven_gradle_plugin_version"
+        classpath "com.novoda:gradle-android-command-plugin:$gradle_android_command_plugin_version"
+        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'org.jetbrains.dokka-android'
 
 android {
     compileSdkVersion 29
@@ -23,6 +21,7 @@ android {
     }
 
     buildTypes {
+        debug { }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -31,8 +30,7 @@ android {
 }
 
 dependencies {
-    releaseImplementation project(path: ':sigcap') // "com.guardanis:sigcap:2.0.0"
-    debugImplementation project(path: ':sigcap')
+    implementation "com.guardanis:sigcap:2.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$androidx_app_compat_version"
@@ -41,17 +39,26 @@ dependencies {
 group = 'com.guardanis'
 
 ext {
-    bintrayName = 'sigcap-androidx'
-    libraryName = 'sigcap-androidx'
-    artifact = 'sigcap-androidx'
+    mavProjectName = "sigcap-androidx"
+    mavLibraryVersion = '2.0.0'
 
-    libraryDescription = 'Easily capture signatures (androidx / kotlin components)'
-    libraryVersion = '2.0.0'
+    mavLibraryDescription = 'Easily capture signatures (androidx / kotlin components)'
+    mavPublishToMavenLocal = false
 }
 
-apply from: project.rootProject.file('deployments.gradle')
+dokka {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
 
-// Disable javadoc for the kotlin files
-tasks.withType(Javadoc).all {
-    failOnError = false
+    includeNonPublic = false
+    skipDeprecated = false
+    reportUndocumented = true
+    skipEmptyPackages = true
 }
+
+task javadocJar(type: Jar, dependsOn: dokka) {
+    classifier = 'javadoc'
+    from dokka.outputDirectory
+}
+
+//apply from: project.rootProject.file('deployments.gradle')

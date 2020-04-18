@@ -1,7 +1,7 @@
 buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.novoda:gradle-android-command-plugin:$gradle_android_Command_plugin_version"
+        classpath "com.novoda:gradle-android-command-plugin:$gradle_android_command_plugin_version"
     }
 }
 
@@ -28,6 +28,9 @@ dependencies {
     implementation project(path: ':sigcap')
     implementation project(path: ':sigcap-androidx')
 
+//    implementation "com.guardanis:sigcap:2.0.0"
+//    implementation "com.guardanis:sigcap-androidx:2.0.0"
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     implementation "androidx.appcompat:appcompat:$androidx_app_compat_version"
@@ -35,3 +38,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
 }
 
+tasks.whenTaskAdded { task ->
+    if(task.name.contains("bintrayUpload")) {
+        task.enabled = false
+    }
+}
