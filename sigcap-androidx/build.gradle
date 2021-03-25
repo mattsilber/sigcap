@@ -1,64 +1,30 @@
 buildscript {
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradle_bintray_plugin_version"
-        classpath "com.novoda:gradle-android-command-plugin:$gradle_android_command_plugin_version"
-        classpath "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradleBintrayPluginVersion"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
     }
 }
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'org.jetbrains.dokka-android'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion rootProject.ext.targetSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 29
-    }
-
-    buildTypes {
-        debug { }
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+        targetSdkVersion rootProject.ext.targetSdkVersion
     }
 }
 
 dependencies {
-    implementation "com.guardanis:sigcap:2.0.0"
+    debugImplementation project(path: ':sigcap')
+    releaseImplementation "com.guardanis:sigcap:$mavLibraryVersion"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$androidx_app_compat_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
 }
 
-group = 'com.guardanis'
-
-ext {
-    mavProjectName = "sigcap-androidx"
-    mavLibraryVersion = '2.0.0'
-
-    mavLibraryDescription = 'Easily capture signatures (androidx / kotlin components)'
-    mavPublishToMavenLocal = false
-}
-
-dokka {
-    outputFormat = 'javadoc'
-    outputDirectory = "$buildDir/javadoc"
-
-    includeNonPublic = false
-    skipDeprecated = false
-    reportUndocumented = true
-    skipEmptyPackages = true
-}
-
-task javadocJar(type: Jar, dependsOn: dokka) {
-    classifier = 'javadoc'
-    from dokka.outputDirectory
-}
-
-//apply from: project.rootProject.file('deployments.gradle')
+apply from: "./publishing.gradle"

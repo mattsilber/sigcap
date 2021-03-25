@@ -1,5 +1,6 @@
 package com.guardanis.sigcap.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -135,6 +136,7 @@ public class SignatureDialogFragment extends DialogFragment
         return dialog;
     }
 
+    @SuppressLint("InflateParams")
     protected View buildView(Activity activity){
         return activity.getLayoutInflater()
                 .inflate(R.layout.sig__default_dialog, null, false);

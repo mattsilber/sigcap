@@ -205,7 +205,7 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         SignatureState(Parcel in) {
             super(in);
 
-            this.signatureData = in.readBundle();
+            this.signatureData = in.readBundle(SignatureState.class.getClassLoader());
         }
 
         @Override

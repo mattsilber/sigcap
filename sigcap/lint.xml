@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <!-- TODO: Create new icons for each density -->
+    <issue id="IconLocation" severity="ignore">
+        <ignore path="res/drawable/sig__action_undo" />
+    </issue>
+</lint>

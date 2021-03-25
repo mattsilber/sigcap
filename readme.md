@@ -104,3 +104,7 @@ supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
 ### Migrating Version 1x to Version 2x
 
 Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v1-v2.md).
+
+### Error: `No variant found for `sigcap`` when building the sample
+
+Disable the experimental setting for `Only sync the active variant` in **Android Studio → Settings → Experimental**.

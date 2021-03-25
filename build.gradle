@@ -1,19 +1,23 @@
 allprojects {
     ext {
-        kotlin_version = "1.3.50"
-        gradle_bintray_plugin_version = "1.8.5"
-        gradle_android_command_plugin_version = "2.1.0"
+        kotlinVersion = "1.4.31"
+        gradleBintrayPluginVersion = "1.8.5"
+        gradleAndroidCommandPluginVersion = "2.1.0"
 
-        androidx_app_compat_version = "1.1.0"
-        androidx_test_ext_junit_version = "1.1.1"
-        androidx_test_runner_version = "1.2.0"
-        androidx_test_core_version = "1.2.0"
-        androidx_test_esspresso_core_version = "3.2.0"
-        mockito_core_version = "2.23.4"
-        robolectric_version = "4.3.1"
+        androidxAppCompatVersion = "1.2.0"
+        androidxTestExtJunitVersion = "1.1.2"
+        androidxTestRunnerVersion = "1.3.0"
+        androidxTestCoreVersion = "1.3.0"
+        androidxTestEsspressoCoreVersion = "3.3.0"
+        mockitoCoreVersion = "2.23.4"
+        robolectricVersion = "4.5.1"
+
+        targetSdkVersion = 30
+        buildToolsVersion = "30.0.3"
 
         mavBintrayRepo = 'maven'
         mavPublishGroupId = 'com.guardanis'
+        mavLibraryVersion = '2.0.0'
 
         mavSiteUrl = 'https://github.com/mattsilber/sigcap'
         mavGitUrl = 'https://github.com/mattsilber/sigcap.git'
@@ -22,11 +26,12 @@ allprojects {
     buildscript {
         repositories {
             maven { url 'https://maven.google.com/' }
+            mavenCentral()
             jcenter()
         }
 
         dependencies {
-            classpath "com.android.tools.build:gradle:3.6.2"
+            classpath "com.android.tools.build:gradle:4.1.3"
         }
     }
 

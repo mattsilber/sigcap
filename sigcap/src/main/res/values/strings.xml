@@ -4,6 +4,8 @@
     <string name="sig__default_dialog_action_confirm">Confirm</string>
     <string name="sig__default_dialog_action_cancel">Cancel</string>
 
+    <string name="sig__default_dialog_ax_action_undo">Undo last</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
