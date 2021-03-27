@@ -23,7 +23,11 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
     }
 
     override fun onPause() {
-        FileCache.clear(this)
+        SignatureFileManager.deleteAll(this)
+                .get()
+                .also({
+                    Log.d("SigcapSample", "Cleared all signature files from local storage: $it")
+                })
 
         super.onPause()
     }
