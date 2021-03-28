@@ -10,12 +10,12 @@ This library is intended to help capture signatures with an easily-configurable 
 
 ```groovy
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    compile('com.guardanis:sigcap:2+')
-    compile('com.guardanis:sigcap-androidx:2+')
+    compile('com.guardanis:sigcap:3+')
+    compile('com.guardanis:sigcap-androidx:3+')
 }
 ```
 
@@ -104,6 +104,10 @@ supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
 ### Migrating Version 1x to Version 2x
 
 Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v1-v2.md).
+
+### Moved to MavenCentral
+
+As of version 3.0.0, sigcap will be hosted on MavenCentral. Versions 2.x and below will remain on JCenter.
 
 ### Error: `No variant found for `sigcap`` when building the sample
 

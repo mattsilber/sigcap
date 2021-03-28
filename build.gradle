@@ -40,7 +40,7 @@ allprojects {
         repositories {
             maven { url "https://maven.google.com/" }
             mavenCentral()
-            jcenter()
+            gradlePluginPortal()
         }
 
         dependencies {
@@ -50,6 +50,7 @@ allprojects {
 
     repositories {
         maven { url "https://maven.google.com/" }
-        jcenter()
+        mavenCentral()
+        gradlePluginPortal()
     }
 }
