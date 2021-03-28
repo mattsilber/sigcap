@@ -15,17 +15,30 @@ allprojects {
         targetSdkVersion = 30
         buildToolsVersion = "30.0.3"
 
-        mavBintrayRepo = 'maven'
-        mavPublishGroupId = 'com.guardanis'
-        mavLibraryVersion = '2.0.0'
+        mavBintrayRepo = "maven"
+        mavPublishGroupId = "com.guardanis"
+        mavLibraryVersion = "2.0.0"
 
-        mavSiteUrl = 'https://github.com/mattsilber/sigcap'
-        mavGitUrl = 'https://github.com/mattsilber/sigcap.git'
+        mavLicenseName = "The Apache License, Version 2.0"
+        mavLicenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+
+        mavDeveloperId = "mattsilber"
+        mavDeveloperName = "Matt Silber"
+        mavDeveloperEmail = "matt@guardanis.com"
+        mavDeveloperOrg = "Guardanis"
+        mavDeveloperOrgUrl = "https://guardanis.com"
+
+        mavSiteUrl = "https://github.com/mattsilber/sigcap"
+        mavGitUrl = "https://github.com/mattsilber/sigcap.git"
+        mavScmConnection = "scm:git:git://github.com:mattsilber/sigcap.git"
+        mavScmDeveloperConnection = "scm:git:ssh://github.com:mattsilber/sigcap.git"
+
+        mavDeploymentRepo = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
     }
 
     buildscript {
         repositories {
-            maven { url 'https://maven.google.com/' }
+            maven { url "https://maven.google.com/" }
             mavenCentral()
             jcenter()
         }
@@ -36,7 +49,7 @@ allprojects {
     }
 
     repositories {
-        maven { url 'https://maven.google.com/' }
+        maven { url "https://maven.google.com/" }
         jcenter()
     }
 }

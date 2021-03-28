@@ -1,18 +1,25 @@
 Properties localProperties = new Properties()
 localProperties.load(project.rootProject.file('local.properties').newDataInputStream())
 
-if (localProperties.getProperty("bintray.release_mode_androidx", "false") != "true") {
+if (localProperties.getProperty("release_mode_androidx", "false") != "true") {
     return
 }
 
 apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'signing'
 
 ext {
     mavProjectName = "sigcap-androidx"
     mavLibraryDescription = 'Easily capture signatures (androidx / kotlin components)'
+
+    mavenCentralUsername = localProperties.getProperty("mavenCentralUsername")
+    mavenCentralPassword = localProperties.getProperty("mavenCentralPassword")
 }
+
+ext["signing.keyId"] = localProperties.getProperty("signing.keyId")
+ext["signing.password"] = localProperties.getProperty("signing.password")
+ext["signing.secretKeyRingFile"] = localProperties.getProperty("signing.secretKeyRingFile")
 
 task sourcesJar(type: Jar) {
     archiveClassifier.set('sources')
@@ -56,48 +63,44 @@ afterEvaluate {
                     url = mavSiteUrl
                     licenses {
                         license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            name = mavLicenseName
+                            url = mavLicenseUrl
                         }
                     }
                     developers {
                         developer {
-                            id = 'mattsilber'
-                            name = 'Matt Silber'
-                            email = 'matt@guardanis.com'
+                            id = mavDeveloperId
+                            name = mavDeveloperName
+                            email = mavDeveloperEmail
+                            organization = mavDeveloperOrg
+                            organizationUrl = mavDeveloperOrgUrl
                         }
                     }
                     scm {
+                        url = mavGitUrl
+                        connection = mavScmConnection
+                        developerConnection = mavScmDeveloperConnection
                         url = mavGitUrl
                     }
                 }
             }
         }
-    }
-}
 
-bintray {
-    user = localProperties.getProperty("bintray.user")
-    key = localProperties.getProperty("bintray.apikey")
+        repositories {
+            maven {
+                name = 'mavenCentral'
+                url = mavDeploymentRepo
 
-    publications = ['sigcapAndroidxRelease']
-    configurations = ['archives']
-
-    publish = true
-    override = false
-
-    pkg {
-        repo = 'maven'
-        name = mavProjectName
-        desc = mavLibraryDescription
-        publicDownloadNumbers = true
-        licenses = ['Apache-2.0']
-        vcsUrl = mavSiteUrl
-        version {
-            name = mavLibraryVersion
-            desc = "Version ${this.version}"
-            released = new Date()
-            vcsTag = mavLibraryVersion
+                credentials {
+                    username mavenCentralUsername
+                    password mavenCentralPassword
+                }
+            }
         }
     }
+
+    signing {
+        sign publishing.publications
+    }
 }
+
