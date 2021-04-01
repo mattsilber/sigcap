@@ -1,7 +1,6 @@
 buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:$gradleBintrayPluginVersion"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.4.30"
     }
 }
