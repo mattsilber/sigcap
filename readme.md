@@ -1,6 +1,7 @@
 # sigcap
 
 [![Download](https://img.shields.io/maven-central/v/com.guardanis/sigcap)](https://search.maven.org/artifact/com.guardanis/sigcap)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-sigcap-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3331)
 
 This library is intended to help capture signatures with an easily-configurable style.
 
