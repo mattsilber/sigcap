@@ -1,6 +1,6 @@
 # sigcap
 
-[![Download](https://api.bintray.com/packages/mattsilber/maven/sigcap/images/download.svg) ](https://bintray.com/mattsilber/maven/sigcap/_latestVersion)
+[![Download](https://img.shields.io/maven-central/v/com.guardanis/sigcap)](https://search.maven.org/artifact/com.guardanis/sigcap)
 
 This library is intended to help capture signatures with an easily-configurable style.
 
@@ -109,6 +109,6 @@ Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migr
 
 As of version 3.0.0, sigcap will be hosted on MavenCentral. Versions 2.x and below will remain on JCenter.
 
-### Error: `No variant found for `sigcap`` when building the sample
+### Error: "No variant found for 'sigcap'" when building the sample
 
 Disable the experimental setting for `Only sync the active variant` in **Android Studio → Settings → Experimental**.
