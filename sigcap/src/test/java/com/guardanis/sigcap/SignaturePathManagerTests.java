@@ -103,10 +103,10 @@ public class SignaturePathManagerTests {
         MotionEvent motionEvent = mock(MotionEvent.class);
 
         Mockito.when(motionEvent.getX())
-                .thenReturn(0.0f);
+                .thenReturn(x);
 
         Mockito.when(motionEvent.getY())
-                .thenReturn(0.0f);
+                .thenReturn(y);
 
         Mockito.when(motionEvent.getAction())
                 .thenReturn(action);

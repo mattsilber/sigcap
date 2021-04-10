@@ -17,17 +17,17 @@ import java.util.List;
 
 public class SignatureRenderer implements Parcelable {
 
-    private Paint signaturePaint = new Paint();
+    protected final Paint signaturePaint = new Paint();
     private int signaturePaintColor = Color.WHITE;
     private int signatureStrokeWidth = 1;
 
-    private Paint baselinePaint = new Paint();
+    protected final Paint baselinePaint = new Paint();
     private int baselinePaintColor = Color.BLACK;
     private int baselineStrokeWidth = 1;
     private int baselinePaddingHorizontal = 12;
     private int baselinePaddingBottom = 12;
 
-    private Paint baselineXMarkPaint = new Paint();
+    protected final Paint baselineXMarkPaint = new Paint();
     private int baselineXMarkPaintColor = Color.BLACK;
     private int baselineXMarkStrokeWidth = 1;
     private int baselineXMarkLength = 12;

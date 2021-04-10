@@ -36,9 +36,9 @@ import static com.guardanis.sigcap.SignatureInputView.KEY__SIGNATURE_REQUEST;
 public class SignatureDialogFragment extends DialogFragment
         implements DeferredSignatureEventDialogClickListener.EventListenerDelegate {
 
-    public static final String DEFAULT_DIALOG_TAG = "signcap__default_dialog";
+    public static final String DEFAULT_DIALOG_TAG = "sigcap__default_dialog";
 
-    public static final String KEY__AUTO_ATTACH_EVENT_LISTENER = "signcap__auto_attach_event_listsner";
+    public static final String KEY__AUTO_ATTACH_EVENT_LISTENER = "sigcap__auto_attach_event_listener";
 
     private SignatureRequest request = new SignatureRequest();
     private SignatureRenderer renderer;
@@ -48,8 +48,8 @@ public class SignatureDialogFragment extends DialogFragment
 
     private WeakReference<SignatureEventListener> eventListener = new WeakReference<SignatureEventListener>(null);
 
-    private SignatureSubmissionDialogClickListener submissionActionClickListener = new SignatureSubmissionDialogClickListener();
-    private SignatureCanceledDialogClickListener canceledActionClickListener = new SignatureCanceledDialogClickListener();
+    private final SignatureSubmissionDialogClickListener submissionActionClickListener = new SignatureSubmissionDialogClickListener();
+    private final SignatureCanceledDialogClickListener canceledActionClickListener = new SignatureCanceledDialogClickListener();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

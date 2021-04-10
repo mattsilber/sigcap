@@ -26,10 +26,11 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
     private SignatureRequest request = new SignatureRequest();
     private SignaturePathManager pathManager = new SignaturePathManager();
-    private SignatureTouchDelegate touchDelegate = new SignatureTouchDelegate();
     private SignatureRenderer renderer;
 
-    private int[] lastRenderBounds = new int[2];
+    private final SignatureTouchDelegate touchDelegate = new SignatureTouchDelegate();
+
+    private final int[] lastRenderBounds = new int[2];
 
     public SignatureInputView(Context context) {
         super(context);

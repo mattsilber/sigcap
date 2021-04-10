@@ -24,7 +24,7 @@ public class SignaturePathManager implements Parcelable {
     }
 
     public void notifyTouchDown(MotionEvent event) {
-        synchronized (paths) {
+        synchronized (this.paths) {
             if (1 < activePath.getCoordinateHistorySize()) {
                 paths.add(activePath);
             }
@@ -35,13 +35,13 @@ public class SignaturePathManager implements Parcelable {
     }
 
     public void notifyTouchMove(MotionEvent event) {
-        synchronized (paths) {
+        synchronized (this.paths) {
             this.activePath.addPathLineTo(event);
         }
     }
 
     public void notifyTouchUp(MotionEvent event) {
-        synchronized (paths) {
+        synchronized (this.paths) {
             paths.add(activePath);
 
             this.activePath = createSignaturePathInstance();
@@ -53,7 +53,7 @@ public class SignaturePathManager implements Parcelable {
     }
 
     public void undoLastPath() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             if (paths.size() < 1)
                 return;
 
@@ -66,7 +66,7 @@ public class SignaturePathManager implements Parcelable {
      * the end of the path history.
      */
     public SignaturePathManager addPath(SignaturePath path) {
-        synchronized (paths) {
+        synchronized (this.paths) {
             this.paths.add(path);
         }
 
@@ -78,7 +78,7 @@ public class SignaturePathManager implements Parcelable {
      * the end of the path history.
      */
     public SignaturePathManager addAllPaths(List<SignaturePath> paths) {
-        synchronized (paths) {
+        synchronized (this.paths) {
             this.paths.addAll(paths);
         }
 
@@ -91,7 +91,7 @@ public class SignaturePathManager implements Parcelable {
      *      various inputs
      */
     public List<SignaturePath> getClonedPaths() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             ArrayList<SignaturePath> cloned = new ArrayList<SignaturePath>();
 
             for (SignaturePath original : this.paths)
@@ -107,7 +107,7 @@ public class SignaturePathManager implements Parcelable {
      *      various inputs
      */
     public List<SignaturePath> getPaths() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             return this.paths;
         }
     }
@@ -118,7 +118,7 @@ public class SignaturePathManager implements Parcelable {
      *      various inputs to
      */
     public SignaturePath getClonedActivePath() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             return new SignaturePath(activePath);
         }
     }
@@ -129,7 +129,7 @@ public class SignaturePathManager implements Parcelable {
      *      various inputs to
      */
     public SignaturePath getActivePath() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             return this.activePath;
         }
     }
@@ -138,7 +138,7 @@ public class SignaturePathManager implements Parcelable {
      * @return true if at least one complete {@link SignaturePath} exists
      */
     public boolean isSignatureInputAvailable() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             return 0 < paths.size();
         }
     }
@@ -147,7 +147,7 @@ public class SignaturePathManager implements Parcelable {
      * Remove all {@link SignaturePath} instances
      */
     public SignaturePathManager clearSignaturePaths() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             this.paths.clear();
         }
 
@@ -165,7 +165,7 @@ public class SignaturePathManager implements Parcelable {
      *      {@link SignaturePath} instances have been collected
      */
     public float[] getMinMaxBounds() {
-        synchronized (paths) {
+        synchronized (this.paths) {
             if (paths.isEmpty())
                 throw new BadSignaturePathException("Can't getMinMaxBounds without a history!");
 

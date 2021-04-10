@@ -8,7 +8,7 @@ import java.lang.ref.WeakReference;
 
 public class UndoLastSignatureClickListener implements View.OnClickListener {
 
-    private WeakReference<SignatureInputView> inputView;
+    private final WeakReference<SignatureInputView> inputView;
 
     public UndoLastSignatureClickListener(SignatureInputView inputView) {
         this.inputView = new WeakReference<SignatureInputView>(inputView);

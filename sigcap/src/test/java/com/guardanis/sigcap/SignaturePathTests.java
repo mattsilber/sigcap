@@ -103,9 +103,9 @@ public class SignaturePathTests {
     public static String joinToString(float[] data) {
         StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < data.length; i++) {
+        for (float datum : data) {
             builder.append(",");
-            builder.append(String.valueOf(data[i]));
+            builder.append(datum);
         }
 
         return builder.toString()
