@@ -19,6 +19,7 @@
         android:layout_alignParentTop="true"
         android:padding="@dimen/sig__default_dialog_action_undo_padding"
         android:contentDescription="@string/sig__default_dialog_ax_action_undo"
-        android:src="@drawable/sig__action_undo"/>
+        android:src="@drawable/sig__action_undo"
+        style="?android:attr/borderlessButtonStyle"/>
 
 </RelativeLayout>

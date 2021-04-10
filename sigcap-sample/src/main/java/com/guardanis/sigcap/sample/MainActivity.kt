@@ -14,12 +14,23 @@ import com.guardanis.sigcap.dialog.SignatureDialogFragment
 import com.guardanis.sigcap.exceptions.CanceledSignatureInputException
 import com.guardanis.sigcap.exceptions.NoSignatureException
 
-class MainActivity: AppCompatActivity(), SignatureEventListener {
+class MainActivity: AppCompatActivity(), SignatureEventListener, View.OnClickListener {
 
     override fun onCreate(savedInstance: Bundle?) {
         super.onCreate(savedInstance)
 
         setContentView(R.layout.activity_main)
+
+        val actions = listOf(
+                R.id.sample_action_fragment,
+                R.id.sample_action_androidx_fragment,
+                R.id.sample_action_stateless
+        )
+
+        actions.forEach({
+            findViewById<View>(it)
+                    .setOnClickListener(this)
+        })
     }
 
     override fun onPause() {
@@ -36,6 +47,14 @@ class MainActivity: AppCompatActivity(), SignatureEventListener {
         super.onResume()
 
         attachFragmentManagerEventListener()
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id ?: 0) {
+            R.id.sample_action_fragment -> startClicked(v)
+            R.id.sample_action_androidx_fragment -> startAppCompatClicked(v)
+            R.id.sample_action_stateless -> startStatelessClicked(v)
+        }
     }
 
     fun startClicked(view: View?) {
