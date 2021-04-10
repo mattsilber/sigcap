@@ -30,7 +30,7 @@ Calling `SignatureInputView.saveSignature()` will render the signature `Path` in
 
 If you want to save the response to a file, you can call `SignatureResponse.saveToFileCache` which will return a Future to the `File` the signature's Bitmap was stored in. Make sure to delete the signature file once you're done with it.
 
-### SignatureDialogBuilder
+### In a dialog: `SignatureDialogBuilder`
 
 This helper class is all you need to integrate `sigcap`, with text and colors easily overridden through the resources (same as the default resources mentioned above).
 
@@ -102,13 +102,49 @@ supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
 
 ```
 
+### In a custom layout
+
+You can also include the `SignatureInputView` directly in your layout:
+
+```xml
+<com.guardanis.sigcap.SignatureInputView
+    android:id="@+id/sig__input_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/sig__default_dialog_input_view_height"
+    android:background="@color/sig__default_background"/>
+```
+
+#### Getting the drawn signature
+
+First, check that there actually is some form of signature-input. If there is, save the signature to a `SignatureResponse` you can use:
+
+```java
+SignatureInputView sigInputView = (SignatureInputView) findViewById(R.id.sig__input_view);
+
+if (sigInputView.isSignatureInputAvailable()) {
+    SignatureResponse response = sigInputView.saveSignature();
+    // Do something with the SignatureResponse...
+    // Bitmap responseBitmap = response.getResult();
+    // Future<File> = response.saveToFileCache();
+}
+```
+
+#### Handling the undo-last-path action
+
+The `SignatureInputView` does not contain the View from the dialogs that triggers the undo-last-path action. When using the `SignatureInputView` directly in your layout, you will instead need to implement a custom undo action that calls `SignatureInputView.undoLastSignaturePath()` yourself, if you desire that behavior:
+
+```java
+SignatureInputView sigInputView = (SignatureInputView) findViewById(R.id.sig__input_view);
+sigInputView.undoLastSignaturePath();
+```
+
+### Migrating Version 2x to Version 3x
+
+Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v2-v3.md).
+
 ### Migrating Version 1x to Version 2x
 
 Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v1-v2.md).
-
-### Moved to MavenCentral
-
-As of version 3.0.0, sigcap will be hosted on MavenCentral. Versions 2.x and below will remain on JCenter.
 
 ### Error: "No variant found for 'sigcap'" when building the sample
 
