@@ -32,13 +32,15 @@ public class SignaturePathManager implements Parcelable {
             }
 
             this.activePath = createSignaturePathInstance();
-            this.activePath.movePathTo(event);
+            this.activePath.startPathAt(event.getX(), event.getY());
         }
     }
 
     public void notifyTouchMove(MotionEvent event) {
         synchronized (lock) {
-            this.activePath.addPathLineTo(event);
+            // Ignore the historical movements or the rendered paths
+            // will appear jagged and of lower quality
+            this.activePath.addPathLineTo(event.getX(), event.getY());
         }
     }
 

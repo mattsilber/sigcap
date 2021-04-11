@@ -3,7 +3,6 @@ package com.guardanis.sigcap.paths;
 import android.graphics.Path;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.MotionEvent;
 
 import com.guardanis.sigcap.exceptions.BadSignaturePathException;
 
@@ -14,6 +13,8 @@ public class SignaturePath implements Parcelable {
 
     private final Path path = new Path();
     private final List<Float[]> coordinateHistory = new ArrayList<Float[]>();
+
+    private final Object lock = new Object();
 
     public SignaturePath() { }
 
@@ -32,38 +33,34 @@ public class SignaturePath implements Parcelable {
         if (flattenedCoordinates.length < 2)
             return;
 
-        movePathTo(new Float[] { flattenedCoordinates[0], flattenedCoordinates[1] });
+        startPathAt(flattenedCoordinates[0], flattenedCoordinates[1]);
 
         for (int i = 2; i < flattenedCoordinates.length; i += 2) {
-            addPathLineTo(new Float[] { flattenedCoordinates[i], flattenedCoordinates[i + 1] });
+            addPathLineTo(flattenedCoordinates[i], flattenedCoordinates[i + 1]);
         }
     }
 
-    public void movePathTo(MotionEvent event) {
-        movePathTo(new Float[] { event.getX(), event.getY() });
-    }
-
-    protected void movePathTo(Float[] coordinates) {
-        synchronized (path) {
+    public void startPathAt(float x, float y) {
+        synchronized (lock) {
             if (!coordinateHistory.isEmpty())
                 throw new BadSignaturePathException("movePathTo should only be called once per SignaturePath instance");
 
-            this.path.moveTo(coordinates[0], coordinates[1]);
-            this.coordinateHistory.add(coordinates);
+            Float[] coordinateHistoryElement = new Float[] { x, y };
+
+            this.path.moveTo(x, y);
+            this.coordinateHistory.add(coordinateHistoryElement);
         }
     }
 
-    public void addPathLineTo(MotionEvent event) {
-        addPathLineTo(new Float[] { event.getX(), event.getY() });
-    }
-
-    protected void addPathLineTo(Float[] coordinates) {
-        synchronized (path) {
+    public void addPathLineTo(float x, float y) {
+        synchronized (lock) {
             if (coordinateHistory.isEmpty())
                 throw new BadSignaturePathException("movePathTo must be called before addPathLineTo");
 
-            this.path.lineTo(coordinates[0], coordinates[1]);
-            this.coordinateHistory.add(coordinates);
+            Float[] coordinateHistoryElement = new Float[] { x, y };
+
+            this.path.lineTo(x, y);
+            this.coordinateHistory.add(coordinateHistoryElement);
         }
     }
 
@@ -72,7 +69,7 @@ public class SignaturePath implements Parcelable {
     }
 
     public int getCoordinateHistorySize() {
-        synchronized (path) {
+        synchronized (lock) {
             return coordinateHistory.size();
         }
     }
@@ -89,7 +86,7 @@ public class SignaturePath implements Parcelable {
      *      coordinate history is empty
      */
     public float[] getMinMaxBounds() {
-        synchronized (path) {
+        synchronized (lock) {
             if (coordinateHistory.isEmpty())
                 throw new BadSignaturePathException("Can't getMinMaxBounds without a history!");
 
@@ -137,7 +134,7 @@ public class SignaturePath implements Parcelable {
      * @return the flattened coordinate history in the form of [x1, y1, x2, y2, ...]
      */
     public float[] serializeCoordinateHistory() {
-        synchronized (path) {
+        synchronized (lock) {
             int coordinateHistorySize = coordinateHistory.size();
             int flattenedIndex = 0;
 

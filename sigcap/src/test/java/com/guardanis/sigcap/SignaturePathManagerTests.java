@@ -20,15 +20,15 @@ public class SignaturePathManagerTests {
 
     @Test
     public void testPathManagerAddsEligibleActivePathToHistoryOnTouchDown() {
-        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_DOWN);
-
         SignaturePathManager manager = new SignaturePathManager();
 
         SignaturePath activePath = manager.getActivePath();
-        activePath.movePathTo(motionEvent);
-        activePath.addPathLineTo(motionEvent);
+        activePath.startPathAt(0, 0);
+        activePath.addPathLineTo(0, 0);
 
         assertEquals(0, manager.getPaths().size());
+
+        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_DOWN);
 
         manager.notifyTouchDown(motionEvent);
 
@@ -50,18 +50,18 @@ public class SignaturePathManagerTests {
 
     @Test
     public void testPathManagerAddsActivePathToHistoryOnTouchUp() {
-        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_MOVE);
-
         SignaturePathManager manager = new SignaturePathManager();
 
         SignaturePath activePath = manager.getActivePath();
-        activePath.movePathTo(motionEvent);
+        activePath.startPathAt(0, 0);
 
         assertEquals(0, manager.getPaths().size());
         assertEquals(1, manager.getActivePath().getCoordinateHistorySize());
 
         assertEquals(0, manager.getClonedPaths().size());
         assertEquals(1, manager.getClonedActivePath().getCoordinateHistorySize());
+
+        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_MOVE);
 
         manager.notifyTouchMove(motionEvent);
         manager.notifyTouchMove(motionEvent);

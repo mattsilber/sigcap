@@ -17,9 +17,9 @@ public class SignaturePathTests {
     @Test
     public void testSignaturePathSerialization() {
         TestSignaturePath pathOriginal = new TestSignaturePath();
-        pathOriginal.movePathTo(new Float[] { 0f, 0f });
-        pathOriginal.addPathLineTo(new Float[] { 1f, 2f });
-        pathOriginal.addPathLineTo(new Float[] { 3f, 4f });
+        pathOriginal.startPathAt(0f, 0f);
+        pathOriginal.addPathLineTo(1f, 2f);
+        pathOriginal.addPathLineTo(3f, 4f);
 
         float[] serialized = pathOriginal.serializeCoordinateHistory();
 
@@ -37,9 +37,9 @@ public class SignaturePathTests {
     @Test
     public void testSignaturePathCloning() {
         TestSignaturePath pathOriginal = new TestSignaturePath();
-        pathOriginal.movePathTo(new Float[] { 0f, 0f });
-        pathOriginal.addPathLineTo(new Float[] { 1f, 2f });
-        pathOriginal.addPathLineTo(new Float[] { 3f, 4f });
+        pathOriginal.startPathAt(0f, 0f);
+        pathOriginal.addPathLineTo(1f, 2f);
+        pathOriginal.addPathLineTo(3f, 4f);
 
         SignaturePath cloned = new SignaturePath(pathOriginal);
 
@@ -84,10 +84,10 @@ public class SignaturePathTests {
     }
 
     @Test(expected = BadSignaturePathException.class)
-    public void testSignaturePathThrowsWhenMoveCalledMoreThanOnce() {
+    public void testSignaturePathThrowsWhenStartPathAtCalledMoreThanOnce() {
         TestSignaturePath path = new TestSignaturePath();
-        path.movePathTo(new Float[] { 0f, 0f });
-        path.movePathTo(new Float[] { 0f, 0f });
+        path.startPathAt(0f, 0f);
+        path.startPathAt(0f, 0f);
 
         fail("BadSignaturePathException should have been thrown");
     }
@@ -95,7 +95,7 @@ public class SignaturePathTests {
     @Test(expected = BadSignaturePathException.class)
     public void testSignaturePathThrowsWhenLineBeforeMove() {
         TestSignaturePath path = new TestSignaturePath();
-        path.addPathLineTo(new Float[] { 0f, 0f });
+        path.addPathLineTo(0f, 0f);
 
         fail("BadSignaturePathException should have been thrown");
     }
