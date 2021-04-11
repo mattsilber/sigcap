@@ -24,7 +24,7 @@
         android:id="@+id/main__buttons_parent"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" >
@@ -64,6 +64,19 @@
             android:gravity="center"
             android:padding="24dp"
             android:text="@string/start_signing_stateless"
+            android:textAllCaps="true"
+            android:textColor="@color/base__text_white"
+            android:textSize="12sp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sample_action_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/base__primary"
+            android:gravity="center"
+            android:padding="24dp"
+            android:text="@string/start_signing_layout"
             android:textAllCaps="true"
             android:textColor="@color/base__text_white"
             android:textSize="12sp" />

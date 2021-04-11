@@ -1,6 +1,8 @@
 package com.guardanis.sigcap.sample
 
+import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,6 +15,7 @@ import com.guardanis.sigcap.dialog.SignatureDialogBuilder
 import com.guardanis.sigcap.dialog.SignatureDialogFragment
 import com.guardanis.sigcap.exceptions.CanceledSignatureInputException
 import com.guardanis.sigcap.exceptions.NoSignatureException
+import java.io.File
 
 class MainActivity: AppCompatActivity(), SignatureEventListener, View.OnClickListener {
 
@@ -24,7 +27,8 @@ class MainActivity: AppCompatActivity(), SignatureEventListener, View.OnClickLis
         val actions = listOf(
                 R.id.sample_action_fragment,
                 R.id.sample_action_androidx_fragment,
-                R.id.sample_action_stateless
+                R.id.sample_action_stateless,
+                R.id.sample_action_layout
         )
 
         actions.forEach({
@@ -49,11 +53,22 @@ class MainActivity: AppCompatActivity(), SignatureEventListener, View.OnClickLis
         attachFragmentManagerEventListener()
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK) {
+            data?.getSerializableExtra(LayoutExampleActivity.INTENT_RESULT_FILE)
+                    ?.let({ it as? File })
+                    ?.also(::showSignatureFile)
+        }
+    }
+
     override fun onClick(v: View?) {
         when (v?.id ?: 0) {
             R.id.sample_action_fragment -> startClicked(v)
             R.id.sample_action_androidx_fragment -> startAppCompatClicked(v)
             R.id.sample_action_stateless -> startStatelessClicked(v)
+            R.id.sample_action_layout -> startLayoutExampleActivity()
         }
     }
 
@@ -109,15 +124,26 @@ class MainActivity: AppCompatActivity(), SignatureEventListener, View.OnClickLis
                 .showStatelessAlertDialog(this, this)
     }
 
-    override fun onSignatureEntered(response: SignatureResponse) {
-        findViewById<AppCompatImageView>(R.id.main__image)
-                .setImageBitmap(response.result)
+    fun startLayoutExampleActivity() {
+        val intent = Intent(this, LayoutExampleActivity::class.java)
 
-        val savedFile = response.saveToFileCache(this)
+        startActivityForResult(intent, 0)
+    }
+
+    override fun onSignatureEntered(response: SignatureResponse) {
+//        val signatureResultImageView = findViewById<AppCompatImageView>(R.id.main__image)
+//        signatureResultImageView.setImageBitmap(response.result)
+
+        response.saveToFileCache(this)
                 .get()
-                .also({
-                    Log.d("SigcapSample", "Signature stored in: ${it.absolutePath}")
-                })
+                .also(::showSignatureFile)
+    }
+
+    private fun showSignatureFile(file: File) {
+        Log.d("SigcapSample", "Showing signature stored in: ${file.absolutePath}")
+
+        val signatureResultImageView = findViewById<AppCompatImageView>(R.id.main__image)
+        signatureResultImageView.setImageURI(Uri.fromFile(file))
     }
 
     override fun onSignatureInputError(e: Throwable) {
