@@ -220,14 +220,15 @@ public class SignatureRenderer implements Parcelable {
         switch (request.getResultCropStrategy()) {
             case SIGNATURE_BOUNDS:
                 float[] signatureMinMaxBounds = manager.getMinMaxBounds();
+                float strokeDiameter = signatureStrokeWidth * 2;
 
                 Bitmap signatureSizedBitmap = Bitmap.createBitmap(
-                        (int) (signatureMinMaxBounds[2] - signatureMinMaxBounds[0]),
-                        (int) (signatureMinMaxBounds[3] - signatureMinMaxBounds[1]),
+                        (int) ((signatureMinMaxBounds[2] - signatureMinMaxBounds[0]) + strokeDiameter),
+                        (int) ((signatureMinMaxBounds[3] - signatureMinMaxBounds[1]) + strokeDiameter),
                         Bitmap.Config.ARGB_8888);
 
                 Canvas canvas = new Canvas(signatureSizedBitmap);
-                canvas.translate(-signatureMinMaxBounds[0], -signatureMinMaxBounds[1]);
+                canvas.translate(signatureStrokeWidth - signatureMinMaxBounds[0], signatureStrokeWidth - signatureMinMaxBounds[1]);
 
                 return new Pair<Bitmap, Canvas>(signatureSizedBitmap, canvas);
             case CANVAS_BOUNDS:
