@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="?attr/actionBarSize"
+    android:padding="24dp"
+    tools:showIn="@layout/activity_layout_example">
+
+    <com.guardanis.sigcap.SignatureInputView
+        android:id="@+id/sig__input_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sig__default_dialog_input_view_height"
+        android:background="@color/sig__default_background"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sig__input_view"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/layout_example_action_undo"
+            android:text="@string/sig__default_dialog_ax_action_undo"
+            style="@style/SignatureAction" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/layout_example_action_save"
+            android:text="@string/layout_example_action_save"
+            style="@style/SignatureAction" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
