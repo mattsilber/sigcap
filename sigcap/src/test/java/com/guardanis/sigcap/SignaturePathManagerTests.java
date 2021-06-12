@@ -7,12 +7,16 @@ import com.guardanis.sigcap.paths.SignaturePathManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.guardanis.sigcap.SignaturePathTests.joinToString;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
@@ -28,7 +32,7 @@ public class SignaturePathManagerTests {
 
         assertEquals(0, manager.getPaths().size());
 
-        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_DOWN);
+        MotionEvent motionEvent = TestHelpers.generateMotionEvent(0f, 0f, MotionEvent.ACTION_DOWN);
 
         manager.notifyTouchDown(motionEvent);
 
@@ -37,7 +41,7 @@ public class SignaturePathManagerTests {
 
     @Test
     public void testPathManagerDoesNotAddIneligibleActivePathToHistoryOnTouchDown() {
-        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_DOWN);
+        MotionEvent motionEvent = TestHelpers.generateMotionEvent(0f, 0f, MotionEvent.ACTION_DOWN);
 
         SignaturePathManager manager = new SignaturePathManager();
 
@@ -61,7 +65,7 @@ public class SignaturePathManagerTests {
         assertEquals(0, manager.getClonedPaths().size());
         assertEquals(1, manager.getClonedActivePath().getCoordinateHistorySize());
 
-        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_MOVE);
+        MotionEvent motionEvent = TestHelpers.generateMotionEvent(0f, 0f, MotionEvent.ACTION_MOVE);
 
         manager.notifyTouchMove(motionEvent);
         manager.notifyTouchMove(motionEvent);
@@ -76,7 +80,7 @@ public class SignaturePathManagerTests {
 
     @Test
     public void testPathManagerUpdatesActivePathOnTouchMove() {
-        MotionEvent motionEvent = generateMotionEvent(0f, 0f, MotionEvent.ACTION_UP);
+        MotionEvent motionEvent = TestHelpers.generateMotionEvent(0f, 0f, MotionEvent.ACTION_UP);
 
         SignaturePathManager manager = new SignaturePathManager();
 
@@ -90,27 +94,30 @@ public class SignaturePathManagerTests {
     @Test
     public void testSignaturePathManagerCalculatedMinMaxBounds() {
         SignaturePathManager manager = new SignaturePathManager()
-                .addPath(new SignaturePath(new float[] { 0f, 0f, 10f, 100f, -25f, -5f }))
-                .addPath(new SignaturePath(new float[] { 10f, -10f, -10f, -10f }))
-                .addPath(new SignaturePath(new float[] { 100f, -100f, 10f, 100f  }));
+                .addAllPaths(Arrays.asList(
+                        new SignaturePath(new float[]{ 0f, 0f, 10f, 100f, -25f, -5f }),
+                        new SignaturePath(new float[]{ 10f, -10f, -10f, -10f }),
+                        new SignaturePath(new float[]{ 100f, -100f, 10f, 100f })
+                ));
 
         assertEquals(
                 "-25.0,-100.0,100.0,100.0",
                 joinToString(manager.getMinMaxBounds()));
     }
 
-    private MotionEvent generateMotionEvent(float x, float y, int action) {
-        MotionEvent motionEvent = mock(MotionEvent.class);
+    @Test
+    public void testSignaturePathManagerClearsActiveAndPreviousPaths() {
+        SignaturePathManager manager = new SignaturePathManager()
+                .addPath(new SignaturePath(new float[] { 100f, -100f, 10f, 100f }));
 
-        Mockito.when(motionEvent.getX())
-                .thenReturn(x);
+        manager.notifyTouchDown(TestHelpers.generateMotionEvent(0, 0, MotionEvent.ACTION_DOWN));
 
-        Mockito.when(motionEvent.getY())
-                .thenReturn(y);
+        assertEquals(1, manager.getActivePath().getCoordinateHistorySize());
+        assert(manager.isSignatureInputAvailable());
 
-        Mockito.when(motionEvent.getAction())
-                .thenReturn(action);
+        manager.clearSignaturePaths();
 
-        return motionEvent;
+        assertEquals(0, manager.getActivePath().getCoordinateHistorySize());
+        assertFalse(manager.isSignatureInputAvailable());
     }
 }

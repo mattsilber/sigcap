@@ -30,8 +30,6 @@ public class SignatureInputView extends View implements View.OnTouchListener {
 
     private final SignatureTouchDelegate touchDelegate = new SignatureTouchDelegate();
 
-    private final int[] lastRenderBounds = new int[2];
-
     public SignatureInputView(Context context) {
         super(context);
 
@@ -103,9 +101,6 @@ public class SignatureInputView extends View implements View.OnTouchListener {
         renderer.drawBaseline(canvas);
         renderer.drawBaselineXMark(canvas);
         renderer.drawPathManager(canvas, pathManager);
-
-        this.lastRenderBounds[0] = getWidth();
-        this.lastRenderBounds[1] = getHeight();
     }
 
     @Override
@@ -140,7 +135,9 @@ public class SignatureInputView extends View implements View.OnTouchListener {
      * data using the supplied {@link SignatureRequest} and {@link SignatureRenderer}
      */
     public Bitmap renderToBitmap() {
-        return renderer.renderToBitmap(request, pathManager, lastRenderBounds);
+        int[] bounds = new int[] { getWidth(), getHeight() };
+
+        return renderer.renderToBitmap(request, pathManager, bounds);
     }
 
     /**

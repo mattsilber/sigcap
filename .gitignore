@@ -8,3 +8,6 @@
 .idea/*
 *.iml
 *.hprof
+
+# Directory test images will be written to
+sigcap/sigcap/

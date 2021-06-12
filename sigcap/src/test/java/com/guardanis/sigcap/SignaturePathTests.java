@@ -28,10 +28,20 @@ public class SignaturePathTests {
         float[] deserializedReserialized = pathDeserialized.serializeCoordinateHistory();
         String deserializedReserializedNormalized = joinToString(deserializedReserialized);
 
+        String expected = "0.0,0.0,1.0,2.0,3.0,4.0";
+
         assertEquals(serialized.length, deserializedReserialized.length);
         assertEquals(6, serialized.length);
-        assertEquals("0.0,0.0,1.0,2.0,3.0,4.0", deserializedReserializedNormalized);
+        assertEquals(expected, deserializedReserializedNormalized);
         assertEquals(joinToString(serialized), deserializedReserializedNormalized);
+
+        SignaturePath pathFromParcel = TestHelpers.parcelizeAndRecreate(pathDeserialized, SignaturePath.CREATOR);
+
+        deserializedReserialized = pathFromParcel.serializeCoordinateHistory();
+        deserializedReserializedNormalized = joinToString(deserializedReserialized);
+
+        assertEquals(serialized.length, deserializedReserialized.length);
+        assertEquals(expected, deserializedReserializedNormalized);
     }
 
     @Test
@@ -96,6 +106,14 @@ public class SignaturePathTests {
     public void testSignaturePathThrowsWhenLineBeforeMove() {
         TestSignaturePath path = new TestSignaturePath();
         path.addPathLineTo(0f, 0f);
+
+        fail("BadSignaturePathException should have been thrown");
+    }
+
+    @Test(expected = BadSignaturePathException.class)
+    public void testSignaturePathThrowsGetMinMaxBoundsWithNoCoordinateHistory() {
+        TestSignaturePath path = new TestSignaturePath();
+        path.getMinMaxBounds();
 
         fail("BadSignaturePathException should have been thrown");
     }

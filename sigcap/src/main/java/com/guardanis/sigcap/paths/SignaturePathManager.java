@@ -153,6 +153,7 @@ public class SignaturePathManager implements Parcelable {
     public SignaturePathManager clearSignaturePaths() {
         synchronized (lock) {
             this.paths.clear();
+            this.activePath = createSignaturePathInstance();
         }
 
         return this;

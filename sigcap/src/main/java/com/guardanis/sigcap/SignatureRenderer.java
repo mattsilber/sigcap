@@ -249,11 +249,19 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getSignaturePaintColor() {
+        return signaturePaintColor;
+    }
+
     public SignatureRenderer setSignatureStrokeWidth(int signatureStrokeWidth) {
         this.signatureStrokeWidth = signatureStrokeWidth;
         this.signaturePaint.setStrokeWidth(signatureStrokeWidth);
 
         return this;
+    }
+
+    public int getSignatureStrokeWidth() {
+        return signatureStrokeWidth;
     }
 
     public SignatureRenderer setBaselinePaintColor(int baselinePaintColor) {
@@ -263,11 +271,19 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselinePaintColor() {
+        return baselinePaintColor;
+    }
+
     public SignatureRenderer setBaselineStrokeWidth(int baselineStrokeWidth) {
         this.baselineStrokeWidth = baselineStrokeWidth;
         this.baselinePaint.setStrokeWidth(baselineStrokeWidth);
 
         return this;
+    }
+
+    public int getBaselineStrokeWidth() {
+        return baselineStrokeWidth;
     }
 
     public SignatureRenderer setBaselinePaddingHorizontal(int baselinePaddingHorizontal) {
@@ -276,10 +292,18 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselinePaddingHorizontal() {
+        return baselinePaddingHorizontal;
+    }
+
     public SignatureRenderer setBaselinePaddingBottom(int baselinePaddingBottom) {
         this.baselinePaddingBottom = baselinePaddingBottom;
 
         return this;
+    }
+
+    public int getBaselinePaddingBottom() {
+        return baselinePaddingBottom;
     }
 
     public SignatureRenderer setBaselineXMarkPaintColor(int baselineXMarkPaintColor) {
@@ -289,11 +313,19 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselineXMarkPaintColor() {
+        return baselineXMarkPaintColor;
+    }
+
     public SignatureRenderer setBaselineXMarkStrokeWidth(int baselineXMarkStrokeWidth) {
         this.baselineXMarkStrokeWidth = baselineXMarkStrokeWidth;
         this.baselineXMarkPaint.setStrokeWidth(baselineStrokeWidth);
 
         return this;
+    }
+
+    public int getBaselineXMarkStrokeWidth() {
+        return baselineXMarkStrokeWidth;
     }
 
     public SignatureRenderer setBaselineXMarkLength(int baselineXMark) {
@@ -302,16 +334,28 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselineXMarkLength() {
+        return baselineXMarkLength;
+    }
+
     public SignatureRenderer setBaselineXMarkOffsetHorizontal(int baselineXMarkOffsetHorizontal) {
         this.baselineXMarkOffsetHorizontal = baselineXMarkOffsetHorizontal;
 
         return this;
     }
 
+    public int getBaselineXMarkOffsetHorizontal() {
+        return baselineXMarkOffsetHorizontal;
+    }
+
     public SignatureRenderer setBaselineXMarkOffsetVertical(int baselineXMarkOffsetVertical) {
         this.baselineXMarkOffsetVertical = baselineXMarkOffsetVertical;
 
         return this;
+    }
+
+    public int getBaselineXMarkOffsetVertical() {
+        return baselineXMarkOffsetVertical;
     }
 
     public static SignatureRenderer createDefaultInstance(Resources resources) {
