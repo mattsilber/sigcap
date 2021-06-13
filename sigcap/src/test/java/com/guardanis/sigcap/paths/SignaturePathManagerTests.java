@@ -1,23 +1,19 @@
-package com.guardanis.sigcap;
+package com.guardanis.sigcap.paths;
 
 import android.view.MotionEvent;
 
-import com.guardanis.sigcap.paths.SignaturePath;
-import com.guardanis.sigcap.paths.SignaturePathManager;
+import com.guardanis.sigcap.TestHelpers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-import static com.guardanis.sigcap.SignaturePathTests.joinToString;
+import static com.guardanis.sigcap.paths.SignaturePathTests.joinToString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 public class SignaturePathManagerTests {

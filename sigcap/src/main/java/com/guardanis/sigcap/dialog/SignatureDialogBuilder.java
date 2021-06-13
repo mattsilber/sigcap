@@ -164,16 +164,20 @@ public class SignatureDialogBuilder {
             String tag,
             SignatureEventListener eventListener) {
 
+        SignatureDialogFragment fragment = new SignatureDialogFragment();
+        fragment.setArguments(buildSignatureDialogArguments());
+        fragment.setSignatureEventListener(eventListener);
+        fragment.show(fragmentManager, tag);
+    }
+
+    protected Bundle buildSignatureDialogArguments() {
         Bundle arguments = new Bundle();
         arguments.putParcelable(KEY__SIGNATURE_REQUEST, request);
         arguments.putParcelable(KEY__SIGNATURE_RENDERER, renderer);
         arguments.putParcelable(KEY__SIGNATURE_PATH_MANAGER, pathManager);
         arguments.putBoolean(KEY__AUTO_ATTACH_EVENT_LISTENER, autoAttachEventListener);
 
-        SignatureDialogFragment fragment = new SignatureDialogFragment();
-        fragment.setArguments(arguments);
-        fragment.setSignatureEventListener(eventListener);
-        fragment.show(fragmentManager, tag);
+        return arguments;
     }
 
     /**

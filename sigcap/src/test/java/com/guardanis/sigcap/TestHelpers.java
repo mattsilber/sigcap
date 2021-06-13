@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 
 public class TestHelpers {
 
-    static <T extends Parcelable> T parcelizeAndRecreate(T element, Parcelable.Creator<T> creator) {
+    public static <T extends Parcelable> T parcelizeAndRecreate(T element, Parcelable.Creator<T> creator) {
         Parcel parcel = Parcel.obtain();
 
         element.writeToParcel(parcel, 0);

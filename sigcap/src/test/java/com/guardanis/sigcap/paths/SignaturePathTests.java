@@ -1,7 +1,8 @@
-package com.guardanis.sigcap;
+package com.guardanis.sigcap.paths;
 
+import com.guardanis.sigcap.TestHelpers;
+import com.guardanis.sigcap.TestSignaturePath;
 import com.guardanis.sigcap.exceptions.BadSignaturePathException;
-import com.guardanis.sigcap.paths.SignaturePath;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
