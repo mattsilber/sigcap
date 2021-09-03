@@ -37,6 +37,6 @@ public class SignatureResponseTests {
         }
 
         assertNotNull(fileResult);
-        assert(fileResult.getPath().matches("sigcap\\\\sig\\d+\\.png"));
+        assert(fileResult.getPath().matches("sigcap[\\\\\\/]sig\\d+\\.png"));
     }
 }
