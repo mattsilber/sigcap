@@ -9,5 +9,7 @@
 *.iml
 *.hprof
 
+jacoco.exec
+
 # Directory test images will be written to
 sigcap/sigcap/
