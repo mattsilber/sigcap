@@ -9,4 +9,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Unit Test
-        run: ./gradlew sigcap:test
+        run: ./gradlew sigcap:test --stacktrace
