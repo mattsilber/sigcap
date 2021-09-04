@@ -45,6 +45,7 @@ public class SignaturePathManager implements Parcelable {
     }
 
     public void notifyTouchUp(MotionEvent event) {
+        // Completely ignore the coordinates of the ACTION_UP event
         synchronized (lock) {
             paths.add(activePath);
 
