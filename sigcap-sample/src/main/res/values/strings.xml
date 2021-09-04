@@ -5,5 +5,9 @@
     <string name="start_signing">Fragment</string>
     <string name="start_signing_app_compat">AndroidX Fragment</string>
     <string name="start_signing_stateless">Stateless</string>
+    <string name="start_signing_layout">In a layout</string>
+
+
+    <string name="layout_example_action_save">Save</string>
 
 </resources>

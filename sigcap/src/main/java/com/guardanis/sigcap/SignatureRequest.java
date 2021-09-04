@@ -22,8 +22,8 @@ public class SignatureRequest implements Parcelable {
 
     protected SignatureRequest(Parcel in) {
         this.resultBackgroundColor = in.readInt();
-        this.resultIncludeBaseline = in.readBoolean();
-        this.resultIncludeBaselineXMark = in.readBoolean();
+        this.resultIncludeBaseline = in.readInt() == 1;
+        this.resultIncludeBaselineXMark = in.readInt() == 1;
         this.resultCropStrategy = ResultCropStrategy.valueOf(in.readString());
     }
 
@@ -113,8 +113,8 @@ public class SignatureRequest implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(resultBackgroundColor);
-        dest.writeBoolean(resultIncludeBaseline);
-        dest.writeBoolean(resultIncludeBaselineXMark);
+        dest.writeInt(resultIncludeBaseline ? 1 : 0);
+        dest.writeInt(resultIncludeBaselineXMark ? 1 : 0);
         dest.writeString(resultCropStrategy.name());
     }
 

@@ -1,1 +1,18 @@
-include ':sigcap', ':sigcap-androidx', ':sigcap-sample'
+pluginManagement {
+    repositories {
+        maven { url "https://maven.google.com/" }
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            // How is this necessary in 2021?!
+            if (requested.id.namespace == "com.android") {
+                useModule("com.android.tools.build:gradle:4.1.3")
+            }
+        }
+    }
+}
+
+include ':sigcap'
+include ':sigcap-androidx'
+include ':sigcap-sample'

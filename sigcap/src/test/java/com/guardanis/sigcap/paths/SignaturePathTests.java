@@ -1,7 +1,8 @@
-package com.guardanis.sigcap;
+package com.guardanis.sigcap.paths;
 
+import com.guardanis.sigcap.TestHelpers;
+import com.guardanis.sigcap.TestSignaturePath;
 import com.guardanis.sigcap.exceptions.BadSignaturePathException;
-import com.guardanis.sigcap.paths.SignaturePath;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -17,9 +18,9 @@ public class SignaturePathTests {
     @Test
     public void testSignaturePathSerialization() {
         TestSignaturePath pathOriginal = new TestSignaturePath();
-        pathOriginal.movePathTo(new Float[] { 0f, 0f });
-        pathOriginal.addPathLineTo(new Float[] { 1f, 2f });
-        pathOriginal.addPathLineTo(new Float[] { 3f, 4f });
+        pathOriginal.startPathAt(0f, 0f);
+        pathOriginal.addPathLineTo(1f, 2f);
+        pathOriginal.addPathLineTo(3f, 4f);
 
         float[] serialized = pathOriginal.serializeCoordinateHistory();
 
@@ -28,18 +29,28 @@ public class SignaturePathTests {
         float[] deserializedReserialized = pathDeserialized.serializeCoordinateHistory();
         String deserializedReserializedNormalized = joinToString(deserializedReserialized);
 
+        String expected = "0.0,0.0,1.0,2.0,3.0,4.0";
+
         assertEquals(serialized.length, deserializedReserialized.length);
         assertEquals(6, serialized.length);
-        assertEquals("0.0,0.0,1.0,2.0,3.0,4.0", deserializedReserializedNormalized);
+        assertEquals(expected, deserializedReserializedNormalized);
         assertEquals(joinToString(serialized), deserializedReserializedNormalized);
+
+        SignaturePath pathFromParcel = TestHelpers.parcelizeAndRecreate(pathDeserialized, SignaturePath.CREATOR);
+
+        deserializedReserialized = pathFromParcel.serializeCoordinateHistory();
+        deserializedReserializedNormalized = joinToString(deserializedReserialized);
+
+        assertEquals(serialized.length, deserializedReserialized.length);
+        assertEquals(expected, deserializedReserializedNormalized);
     }
 
     @Test
     public void testSignaturePathCloning() {
         TestSignaturePath pathOriginal = new TestSignaturePath();
-        pathOriginal.movePathTo(new Float[] { 0f, 0f });
-        pathOriginal.addPathLineTo(new Float[] { 1f, 2f });
-        pathOriginal.addPathLineTo(new Float[] { 3f, 4f });
+        pathOriginal.startPathAt(0f, 0f);
+        pathOriginal.addPathLineTo(1f, 2f);
+        pathOriginal.addPathLineTo(3f, 4f);
 
         SignaturePath cloned = new SignaturePath(pathOriginal);
 
@@ -84,10 +95,10 @@ public class SignaturePathTests {
     }
 
     @Test(expected = BadSignaturePathException.class)
-    public void testSignaturePathThrowsWhenMoveCalledMoreThanOnce() {
+    public void testSignaturePathThrowsWhenStartPathAtCalledMoreThanOnce() {
         TestSignaturePath path = new TestSignaturePath();
-        path.movePathTo(new Float[] { 0f, 0f });
-        path.movePathTo(new Float[] { 0f, 0f });
+        path.startPathAt(0f, 0f);
+        path.startPathAt(0f, 0f);
 
         fail("BadSignaturePathException should have been thrown");
     }
@@ -95,7 +106,15 @@ public class SignaturePathTests {
     @Test(expected = BadSignaturePathException.class)
     public void testSignaturePathThrowsWhenLineBeforeMove() {
         TestSignaturePath path = new TestSignaturePath();
-        path.addPathLineTo(new Float[] { 0f, 0f });
+        path.addPathLineTo(0f, 0f);
+
+        fail("BadSignaturePathException should have been thrown");
+    }
+
+    @Test(expected = BadSignaturePathException.class)
+    public void testSignaturePathThrowsGetMinMaxBoundsWithNoCoordinateHistory() {
+        TestSignaturePath path = new TestSignaturePath();
+        path.getMinMaxBounds();
 
         fail("BadSignaturePathException should have been thrown");
     }
@@ -103,9 +122,9 @@ public class SignaturePathTests {
     public static String joinToString(float[] data) {
         StringBuilder builder = new StringBuilder();
 
-        for (int i = 0; i < data.length; i++) {
+        for (float datum : data) {
             builder.append(",");
-            builder.append(String.valueOf(data[i]));
+            builder.append(datum);
         }
 
         return builder.toString()

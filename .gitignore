@@ -6,7 +6,10 @@
 /build
 /captures
 .idea/*
-gradle/*
-gradlew
-gradlew.bat
 *.iml
+*.hprof
+
+jacoco.exec
+
+# Directory test images will be written to
+sigcap/sigcap/

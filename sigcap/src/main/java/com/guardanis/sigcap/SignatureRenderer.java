@@ -17,17 +17,17 @@ import java.util.List;
 
 public class SignatureRenderer implements Parcelable {
 
-    private Paint signaturePaint = new Paint();
+    protected final Paint signaturePaint = new Paint();
     private int signaturePaintColor = Color.WHITE;
     private int signatureStrokeWidth = 1;
 
-    private Paint baselinePaint = new Paint();
+    protected final Paint baselinePaint = new Paint();
     private int baselinePaintColor = Color.BLACK;
     private int baselineStrokeWidth = 1;
     private int baselinePaddingHorizontal = 12;
     private int baselinePaddingBottom = 12;
 
-    private Paint baselineXMarkPaint = new Paint();
+    protected final Paint baselineXMarkPaint = new Paint();
     private int baselineXMarkPaintColor = Color.BLACK;
     private int baselineXMarkStrokeWidth = 1;
     private int baselineXMarkLength = 12;
@@ -220,14 +220,15 @@ public class SignatureRenderer implements Parcelable {
         switch (request.getResultCropStrategy()) {
             case SIGNATURE_BOUNDS:
                 float[] signatureMinMaxBounds = manager.getMinMaxBounds();
+                float strokeDiameter = signatureStrokeWidth * 2;
 
                 Bitmap signatureSizedBitmap = Bitmap.createBitmap(
-                        (int) (signatureMinMaxBounds[2] - signatureMinMaxBounds[0]),
-                        (int) (signatureMinMaxBounds[3] - signatureMinMaxBounds[1]),
+                        (int) ((signatureMinMaxBounds[2] - signatureMinMaxBounds[0]) + strokeDiameter),
+                        (int) ((signatureMinMaxBounds[3] - signatureMinMaxBounds[1]) + strokeDiameter),
                         Bitmap.Config.ARGB_8888);
 
                 Canvas canvas = new Canvas(signatureSizedBitmap);
-                canvas.translate(-signatureMinMaxBounds[0], -signatureMinMaxBounds[1]);
+                canvas.translate(signatureStrokeWidth - signatureMinMaxBounds[0], signatureStrokeWidth - signatureMinMaxBounds[1]);
 
                 return new Pair<Bitmap, Canvas>(signatureSizedBitmap, canvas);
             case CANVAS_BOUNDS:
@@ -248,11 +249,19 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getSignaturePaintColor() {
+        return signaturePaintColor;
+    }
+
     public SignatureRenderer setSignatureStrokeWidth(int signatureStrokeWidth) {
         this.signatureStrokeWidth = signatureStrokeWidth;
         this.signaturePaint.setStrokeWidth(signatureStrokeWidth);
 
         return this;
+    }
+
+    public int getSignatureStrokeWidth() {
+        return signatureStrokeWidth;
     }
 
     public SignatureRenderer setBaselinePaintColor(int baselinePaintColor) {
@@ -262,11 +271,19 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselinePaintColor() {
+        return baselinePaintColor;
+    }
+
     public SignatureRenderer setBaselineStrokeWidth(int baselineStrokeWidth) {
         this.baselineStrokeWidth = baselineStrokeWidth;
         this.baselinePaint.setStrokeWidth(baselineStrokeWidth);
 
         return this;
+    }
+
+    public int getBaselineStrokeWidth() {
+        return baselineStrokeWidth;
     }
 
     public SignatureRenderer setBaselinePaddingHorizontal(int baselinePaddingHorizontal) {
@@ -275,10 +292,18 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselinePaddingHorizontal() {
+        return baselinePaddingHorizontal;
+    }
+
     public SignatureRenderer setBaselinePaddingBottom(int baselinePaddingBottom) {
         this.baselinePaddingBottom = baselinePaddingBottom;
 
         return this;
+    }
+
+    public int getBaselinePaddingBottom() {
+        return baselinePaddingBottom;
     }
 
     public SignatureRenderer setBaselineXMarkPaintColor(int baselineXMarkPaintColor) {
@@ -288,11 +313,19 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselineXMarkPaintColor() {
+        return baselineXMarkPaintColor;
+    }
+
     public SignatureRenderer setBaselineXMarkStrokeWidth(int baselineXMarkStrokeWidth) {
         this.baselineXMarkStrokeWidth = baselineXMarkStrokeWidth;
         this.baselineXMarkPaint.setStrokeWidth(baselineStrokeWidth);
 
         return this;
+    }
+
+    public int getBaselineXMarkStrokeWidth() {
+        return baselineXMarkStrokeWidth;
     }
 
     public SignatureRenderer setBaselineXMarkLength(int baselineXMark) {
@@ -301,16 +334,28 @@ public class SignatureRenderer implements Parcelable {
         return this;
     }
 
+    public int getBaselineXMarkLength() {
+        return baselineXMarkLength;
+    }
+
     public SignatureRenderer setBaselineXMarkOffsetHorizontal(int baselineXMarkOffsetHorizontal) {
         this.baselineXMarkOffsetHorizontal = baselineXMarkOffsetHorizontal;
 
         return this;
     }
 
+    public int getBaselineXMarkOffsetHorizontal() {
+        return baselineXMarkOffsetHorizontal;
+    }
+
     public SignatureRenderer setBaselineXMarkOffsetVertical(int baselineXMarkOffsetVertical) {
         this.baselineXMarkOffsetVertical = baselineXMarkOffsetVertical;
 
         return this;
+    }
+
+    public int getBaselineXMarkOffsetVertical() {
+        return baselineXMarkOffsetVertical;
     }
 
     public static SignatureRenderer createDefaultInstance(Resources resources) {

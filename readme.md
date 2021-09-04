@@ -1,6 +1,8 @@
 # sigcap
 
-[![Download](https://api.bintray.com/packages/mattsilber/maven/sigcap/images/download.svg) ](https://bintray.com/mattsilber/maven/sigcap/_latestVersion)
+[![Download](https://img.shields.io/maven-central/v/com.guardanis/sigcap)](https://search.maven.org/artifact/com.guardanis/sigcap)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-sigcap-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/3331)
+![Tests](https://github.com/mattsilber/sigcap/actions/workflows/test.yml/badge.svg)
 
 This library is intended to help capture signatures with an easily-configurable style.
 
@@ -10,12 +12,12 @@ This library is intended to help capture signatures with an easily-configurable 
 
 ```groovy
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    compile('com.guardanis:sigcap:2+')
-    compile('com.guardanis:sigcap-androidx:2+')
+    compile('com.guardanis:sigcap:3+')
+    compile('com.guardanis:sigcap-androidx:3+')
 }
 ```
 
@@ -29,7 +31,7 @@ Calling `SignatureInputView.saveSignature()` will render the signature `Path` in
 
 If you want to save the response to a file, you can call `SignatureResponse.saveToFileCache` which will return a Future to the `File` the signature's Bitmap was stored in. Make sure to delete the signature file once you're done with it.
 
-### SignatureDialogBuilder
+### In a dialog: `SignatureDialogBuilder`
 
 This helper class is all you need to integrate `sigcap`, with text and colors easily overridden through the resources (same as the default resources mentioned above).
 
@@ -101,6 +103,50 @@ supportFragmentManager.findAppCompatSignatureDialogFragment(tag)
 
 ```
 
+### In a custom layout
+
+You can also include the `SignatureInputView` directly in your layout:
+
+```xml
+<com.guardanis.sigcap.SignatureInputView
+    android:id="@+id/sig__input_view"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/sig__default_dialog_input_view_height"
+    android:background="@color/sig__default_background"/>
+```
+
+#### Getting the drawn signature
+
+First, check that there actually is some form of signature-input. If there is, save the signature to a `SignatureResponse` you can use:
+
+```java
+SignatureInputView sigInputView = (SignatureInputView) findViewById(R.id.sig__input_view);
+
+if (sigInputView.isSignatureInputAvailable()) {
+    SignatureResponse response = sigInputView.saveSignature();
+    // Do something with the SignatureResponse...
+    // Bitmap responseBitmap = response.getResult();
+    // Future<File> = response.saveToFileCache();
+}
+```
+
+#### Handling the undo-last-path action
+
+The `SignatureInputView` does not contain the View from the dialogs that triggers the undo-last-path action. When using the `SignatureInputView` directly in your layout, you will instead need to implement a custom undo action that calls `SignatureInputView.undoLastSignaturePath()` yourself, if you desire that behavior:
+
+```java
+SignatureInputView sigInputView = (SignatureInputView) findViewById(R.id.sig__input_view);
+sigInputView.undoLastSignaturePath();
+```
+
+### Migrating Version 2x to Version 3x
+
+Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v2-v3.md).
+
 ### Migrating Version 1x to Version 2x
 
 Read this [migration guide](https://github.com/mattsilber/sigcap/raw/master/migration-v1-v2.md).
+
+### Error: "No variant found for 'sigcap'" when building the sample
+
+Disable the experimental setting for `Only sync the active variant` in **Android Studio → Settings → Experimental**.

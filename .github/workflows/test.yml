@@ -1,0 +1,12 @@
+name: Unit Test
+
+on:
+  push:
+
+jobs:
+  unit_tests:
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Unit Test
+        run: ./gradlew sigcap:test --stacktrace

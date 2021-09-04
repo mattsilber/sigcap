@@ -1,29 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <com.guardanis.sigcap.SignatureInputView
+        android:id="@+id/sig__input_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sig__default_dialog_input_view_height"
+        android:background="@color/sig__default_background"/>
 
-        <com.guardanis.sigcap.SignatureInputView
-            android:id="@+id/sig__input_view"
-            android:layout_width="fill_parent"
-            android:layout_height="@dimen/sig__default_dialog_input_view_height"
-            android:background="@color/sig__default_background"/>
+    <ImageView
+        android:id="@+id/sig__action_undo"
+        android:layout_width="@dimen/sig__default_dialog_action_undo"
+        android:layout_height="@dimen/sig__default_dialog_action_undo"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:padding="@dimen/sig__default_dialog_action_undo_padding"
+        android:contentDescription="@string/sig__default_dialog_ax_action_undo"
+        android:src="@drawable/sig__action_undo"
+        style="?android:attr/borderlessButtonStyle"/>
 
-        <ImageView
-            android:id="@+id/sig__action_undo"
-            android:layout_width="@dimen/sig__default_dialog_action_undo"
-            android:layout_height="@dimen/sig__default_dialog_action_undo"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:padding="@dimen/sig__default_dialog_action_undo_padding"
-            android:src="@drawable/sig__action_undo"/>
-
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>
