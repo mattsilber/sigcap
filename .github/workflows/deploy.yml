@@ -1,0 +1,26 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Publish Sigcap to Maven (Local)
+        run: ./gradlew sigcap:publishReleasePublicationToMavenLocal
+
+      - name: Publish Sigcap to Maven (Central)
+        run: ./gradlew sigcap:publishReleasePublicationToMavenCentralRepository
+
+      - name: Publish Sigcap-Androidx to Maven (Central)
+        run: ./gradlew sigcap-androidx:publishReleasePublicationToMavenCentralRepository

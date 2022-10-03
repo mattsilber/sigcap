@@ -1,13 +1,4 @@
-def localPropertiesFile = new File(project.rootProject.getRootDir(), 'local.properties')
-
-if (!localPropertiesFile.exists()) {
-    return
-}
-
-Properties localProperties = new Properties()
-localProperties.load(localPropertiesFile.newDataInputStream())
-
-if (localProperties.getProperty("release_mode_core", "false") != "true") {
+if (System.getenv("RELEASE_MODE") != "true") {
     return
 }
 
@@ -17,14 +8,7 @@ apply plugin: 'signing'
 ext {
     mavProjectName = "sigcap"
     mavLibraryDescription = 'Easily capture signatures'
-
-    mavenCentralUsername = localProperties.getProperty("mavenCentralUsername")
-    mavenCentralPassword = localProperties.getProperty("mavenCentralPassword")
 }
-
-ext["signing.keyId"] = localProperties.getProperty("signing.keyId")
-ext["signing.password"] = localProperties.getProperty("signing.password")
-ext["signing.secretKeyRingFile"] = localProperties.getProperty("signing.secretKeyRingFile")
 
 task sourcesJar(type: Jar) {
     archiveClassifier.set('sources')
@@ -50,7 +34,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 afterEvaluate {
     publishing {
         publications {
-            sigcapRelease(MavenPublication) {
+            release(MavenPublication) {
                 from components.release
 
                 artifact sourcesJar
@@ -94,14 +78,20 @@ afterEvaluate {
                 url = mavDeploymentRepo
 
                 credentials {
-                    username mavenCentralUsername
-                    password mavenCentralPassword
+                    username System.getenv("MAVEN_CENTRAL_USER")
+                    password System.getenv("MAVEN_CENTRAL_PASS")
                 }
             }
         }
     }
 
     signing {
+        useInMemoryPgpKeys(
+                System.getenv("SIGNING_KEY_ID"),
+                System.getenv("SIGNING_KEY"),
+                System.getenv("SIGNING_KEY_PASSWORD")
+        )
+
         sign publishing.publications
     }
 }

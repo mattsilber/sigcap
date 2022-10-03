@@ -43,6 +43,7 @@ allprojects {
         maven { url "https://maven.google.com/" }
         mavenCentral()
         gradlePluginPortal()
+        mavenLocal()
     }
 }
 
