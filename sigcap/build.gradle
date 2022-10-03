@@ -1,5 +1,7 @@
 plugins {
     id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "kover"
 }
 
 android {
@@ -7,7 +9,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -30,6 +32,12 @@ dependencies {
     testImplementation "androidx.test.espresso:espresso-core:$androidxTestEsspressoCoreVersion"
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
+}
+
+kover {
+    instrumentation {
+        excludeTasks.add "testReleaseUnitTest"
+    }
 }
 
 apply from: "./publishing.gradle"

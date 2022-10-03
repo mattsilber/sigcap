@@ -7,6 +7,7 @@ buildscript {
 plugins {
     id "com.android.library"
     id "org.jetbrains.kotlin.android"
+    id "kover"
 }
 
 android {
@@ -23,8 +24,13 @@ dependencies {
     debugImplementation project(path: ':sigcap')
     releaseImplementation "com.guardanis:sigcap:$mavLibraryVersion"
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+}
+
+kover {
+    instrumentation {
+        excludeTasks.add "testReleaseUnitTest"
+    }
 }
 
 apply from: "./publishing.gradle"
