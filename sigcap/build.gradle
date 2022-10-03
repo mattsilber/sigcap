@@ -1,5 +1,7 @@
 plugins {
     id "com.android.library"
+    id "org.jetbrains.kotlin.android"
+    id "kover"
 }
 
 android {
@@ -30,6 +32,12 @@ dependencies {
     testImplementation "androidx.test.espresso:espresso-core:$androidxTestEsspressoCoreVersion"
     testImplementation "org.mockito:mockito-core:$mockitoCoreVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
+}
+
+kover {
+    instrumentation {
+        excludeTasks.add "testReleaseUnitTest"
+    }
 }
 
 apply from: "./publishing.gradle"
